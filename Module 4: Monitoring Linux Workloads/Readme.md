@@ -62,7 +62,7 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 
 | Step Number  | Comment                         |
 | :----------- | :--------------------------     |
-|  1           | Push the Deploy to Azure Button [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAnthonyDelagarde%2FLinux-on-Azure-LevelUp-FY25%2Fmain%2FModule%25204%253A%2520Monitoring%2520Linux%2520Workloads%2Fautodeploy.json)|
+|  1           | Push Deploy to Azure Button [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAnthonyDelagarde%2FLinux-on-Azure-LevelUp-FY25%2Fmain%2FModule%25204%253A%2520Monitoring%2520Linux%2520Workloads%2Fautodeploy.json)|
 |  2           | Your Azure Subscription with a custom populated template should appear on your computer screen screen                                | 
 
 <!--heading-->
