@@ -47,7 +47,7 @@ The following are some recommendations for review when monitoring Linux workload
 - Continuous Improvement: Regularly review the collected data and adjust monitoring strategy as needed. Use the insights gained to optimize the application's performance and reliability
 - **Leverage the Azure Monitor Baseline Alerts (AMBA)** This issolution accelerator contains a list of recommended Azure Monitor metric,activity log alert rules, and recommended thrshold values for the Azure Infrastructure platform. The solution can be implemented for an Azure Landing Zone (ALZ) which is either "greenfield" or "brownfield". Please refer to the following for further details [Azure Monitor Baseline Alerts](https://azure.github.io/azure-monitor-baseline-alerts/welcome/).Each of the alert rules documented have been compiled into Azure Policy definitions and these have then been packaged into logical Policy Initiatives based on the ALZ management group structure [Management Groups](https://learn.microsoft.com/en-gb/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-management-groups) as depicted in the below graphic.
 
-![ALZ Management Group Structure](/../../media/alz-management-groups.png)
+![ALZ Management Group Structure](/../../../media/alz-management-groups.png)
 
 <!--heading-->
 <a id="item-three"></a>
