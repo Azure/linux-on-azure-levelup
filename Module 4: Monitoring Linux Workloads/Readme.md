@@ -1,4 +1,8 @@
-# This module will provide an overview monitoring Linux workloads in Azure
+**Table of content:****
+- [Monitoring Consideratiion](#item-one)
+- [Monitoring Recommendatons](#item-two)
+- [Linux Monitoring Lab](#item-three)
+- [Next Steps](#item-four)
 
 ## Goal
 
@@ -7,7 +11,8 @@ This session aims to help the Microsoft's technical community better monitor cri
 ## Prerequisites for this Module
 
 The completion of this module will require access to an active Azure subscription. Is is recommended to have at a minimum contributor access to the subscription for the successful deployment of resources.
-
+<!--heading -->
+<a id="item-one"></a>
 ## Monitoring Considerations
 
 There isn’t definitive list of what you should monitor when you deploy something to Azure because “it depends”, on what services you’re using and how the services are used, which will in turn dictate what you should monitor and what thresholds the metrics you do decide to collect are and what errors you should alert on in logs.
@@ -27,7 +32,7 @@ Once workloads have been identified a valuable resource for review with a currat
 ## Monitoring Recomendations
 
 The following are some recommendations for review when monitoring Linux workloads in Azure.
- 
+
 - Implementation: Implement an initial set of metrics and limit potential “white noise“ and gradually add required counters
 - Conduct an initial validation of the monitoring solution and how will it integrate with their current organizational structure
 - Notifications: Implement email notifications, SMS alerts, Logic Apps, Azure automation runbooks, and ITSM tooling to enable additional capabilities integrating with the customers ticketing system as part of overall monitoring strategy
@@ -36,4 +41,3 @@ The following are some recommendations for review when monitoring Linux workload
 - Data Tier: Monitor your database performance and query execution times using Azure Monitor or Oracle Enterprise Manager
 - Distributed Tracing: Use Application Insights to implement distributed tracing. This helps you track requests as they flow through different components of the application, making it easier to diagnose performance issues and failures
 - Continuous Improvement: Regularly review the collected data and adjust monitoring strategy as needed. Use the insights gained to optimize the application's performance and reliability
-
