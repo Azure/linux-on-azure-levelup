@@ -1,4 +1,4 @@
-# This module will provide guidance on monitoring Linux workloads in Azure
+# This module will provide an overview monitoring Linux workloads in Azure
 
 ## Goal
 
