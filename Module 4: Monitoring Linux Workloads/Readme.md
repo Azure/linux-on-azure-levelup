@@ -56,13 +56,13 @@ The following are some recommendations for review when monitoring Linux workload
 
 In the upcoming lab, participants will engage in deploying resources within Azure, crafting a tailored dashboard, and utilizing Azure Monitor to assess system health. The diagram provided below will illustrate the deployment architecture facilitated by the solution accelerator, which is designed to streamline and expedite the implementation process. You will need to follow the lab in the step by to step for succesful completion.
 
-![Module Four Lab](./media/Lab3.png#center)
+![Module Four Lab](./media/Lab3.png)
 
 **Lab instructions**
 
 | Step Number  | Comment                         |
 | :----------- | :--------------------------     |
-|  1           | Push the Deploy to Azure Button |
+|  1           | Push the Deploy to Azure Button [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAnthonyDelagarde%2FLinux-on-Azure-LevelUp-FY25%2Fmain%2FModule%25204%253A%2520Monitoring%2520Linux%2520Workloads%2Fautodeploy.json)|
 |  2           | Your Azure Subscription with a custom populated template should appear on your computer screen screen                                | 
 
 <!--heading-->
