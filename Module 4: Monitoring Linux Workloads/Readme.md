@@ -1,4 +1,4 @@
-# Module Four Monitoring Linux Workloads in Azure
+# Module Four monitoring Linux Workloads in Azure
 
 **Table of content:**
 - [Monitoring Consideratiion](#item-one)
@@ -30,7 +30,8 @@ Once workloads have been identified a valuable resource for review with a currat
 - Understand the customers industry vertical to validate if there are specific regulatory requirements and monitoring retention required
 - Validate name resolution in relation to the Linux workload as well as ancilliary services that interact with the specified workloads
 - Has redundancy been implemented in the design and are there any SLA’s?
-  
+<!--heading -->
+<a id="item-two"></a>  
 ## Monitoring Recomendations
 
 The following are some recommendations for review when monitoring Linux workloads in Azure.
@@ -43,3 +44,14 @@ The following are some recommendations for review when monitoring Linux workload
 - Data Tier: Monitor your database performance and query execution times using Azure Monitor or Oracle Enterprise Manager
 - Distributed Tracing: Use Application Insights to implement distributed tracing. This helps you track requests as they flow through different components of the application, making it easier to diagnose performance issues and failures
 - Continuous Improvement: Regularly review the collected data and adjust monitoring strategy as needed. Use the insights gained to optimize the application's performance and reliability
+
+<!--heading-->
+<a id="item-three"></a>
+## Linux Monitoring Lab
+
+
+
+
+<!--heading-->
+<a id="item-four"></a>
+## Next Steps 
