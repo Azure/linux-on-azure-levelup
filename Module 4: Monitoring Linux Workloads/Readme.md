@@ -1,4 +1,4 @@
-**Table of content:****
+**Table of content:**
 - [Monitoring Consideratiion](#item-one)
 - [Monitoring Recommendatons](#item-two)
 - [Linux Monitoring Lab](#item-three)
