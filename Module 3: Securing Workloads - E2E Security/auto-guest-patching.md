@@ -1,63 +1,42 @@
+# Schedule recurring Guest Patches with Azure Update Manager
+
+If automatic VM guest patching is enabled on a VM, then the available Critical and Security patches are downloaded and applied automatically on the VM. Automatic VM Guest Patching is integrated with Azure Update Manager service.
+To install patches with other patch classifications or schedule patch installation within your own custom maintenance window you can use Azurer Update Manager. 
 
 Enabling automatic guest patching for your Azure Virtual Machines (VMs) and Scale Sets (VMSS) helps ease update management by safely and automatically patching virtual machines to maintain security compliance, while limiting the blast radius of VMs. 
 
+In this Lab we’re going to use Azure Update Manager service to schedule recurring updates for our VM.  
+
+Automatic VM guest patching has the following characteristics:
+- Patches classified as *Critical* or *Security* are automatically downloaded and applied on the VM.
+- Patches are applied during off-peak hours for IaaS VMs in the VM's time zone.
+- Patches are applied during all hours for VMSS Flex.
+- Azure manages the patch orchestration and follows [availability-first principles](https://learn.microsoft.com/en-us/azure/virtual-machines/automatic-vm-guest-patching#availability-first-updates).
+- Virtual machine health, as determined through platform health signals, is monitored to detect patching failures.
+- Application health can be monitored through the [Application Health extension](https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-health-extension?tabs=rest-api).
+- Works for all VM sizes.
  
-
-Automatic VM guest patching has the following characteristics: 
-
-Patches classified as Critical or Security are automatically downloaded and applied on the VM. 
-
-Patches are applied during off-peak hours for IaaS VMs in the VM's time zone. 
-
-Patches are applied during all hours for VMSS Flex. 
-
-Azure manages the patch orchestration and follows availability-first principles. 
-
-Virtual machine health, as determined through platform health signals, is monitored to detect patching failures. 
-
-Application health can be monitored through the Application Health extension. 
-
-Works for all VM sizes. 
-
-Features and limitations unique to this scope include: 
-
-Patch orchestration for virtual machines needs to be set to AutomaticByPlatform. 
-
-The upper maintenance window is 3 hours and 55 minutes. 
-
-A minimum of 1 hour and 30 minutes is required for the maintenance window. 
-
-The value of Repeats should be at least 6 hours. 
-
-The start time for a schedule should be at least 15 minutes after the schedule's creation time. 
-
-Screenshot of options for adding or modifying a schedule. 
 
  
 
-Automatic VM Guest Patching is integrated with Azure Update Manager service. In this Lab we’re going to use Azure Update Manager service to schedule recurring updates for our VM.  
+
 
  
 
-Prerequisite for this Lab 
+## Prerequisite for this Lab 
 
-Already running VM  
-
-permissions to create a new VM 
-
- 
+Linux VM
+Permissions to create a new VM 
 
 Prerequisites for scheduled patching 
 
-See Prerequisites for Update Manager. 
+See [Prerequisites for Update Manager](https://learn.microsoft.com/en-us/azure/update-manager/prerequisites) 
 
-Patch orchestration of the Azure machines should be set to Customer Managed Schedules. For more information, see Enable schedule patching on existing VMs. For Azure Arc-enabled machines, it isn't a requirement. 
-
- 
+Patch orchestration of the Azure machines should be set to Customer Managed Schedules. For more information, see [Enable schedule patching on existing VMs](https://learn.microsoft.com/en-us/azure/update-manager/prerequsite-for-schedule-patching?tabs=new-prereq-portal%2Cauto-portal#enable-schedule-patching-on-azure-vms). For Azure Arc-enabled machines, it isn't a requirement. 
 
  
 
-TASK 1 : Schedule recurring updates at scale 
+## TASK 1 : Schedule recurring updates at scale 
 
 To schedule recurring updates at scale, follow these steps. 
 
@@ -65,35 +44,46 @@ You can schedule updates from the Overview or Machines pane.
 
 In this lab we’re going to use Overview Pane :  
 
-Sign in to the Azure portal. 
 
-On the Azure Update Manager | Overview page, select your subscription, and then select Schedule updates. 
 
-On the Create new maintenance configuration page, you can create a schedule for multiple machines. 
+To schedule recurring updates at scale, follow these steps.
 
-Currently, VMs and maintenance configuration in the same subscription are supported. 
+You can schedule updates from the **Overview** or **Machines** pane.
 
-On the Basics tab, select Subscription, Resource Group, and all options in Instance details. 
+# [From the Overview pane](#tab/schedule-updates-scale-overview)
 
-Select Add a schedule. In Add/Modify schedule, specify the schedule details, such as: 
+1. Sign in to the [Azure portal](https://portal.azure.com).
 
-Start on 
+1. On the **Azure Update Manager** | **Overview** page, select your subscription, and then select **Schedule updates**.
 
-Maintenance window (in hours) 
+1. On the **Create new maintenance configuration** page, you can create a schedule for multiple machines.
 
-Repeats (monthly, daily, or weekly) 
+	Currently, VMs and maintenance configuration in the same subscription are supported.
 
-Add end date 
-
-Schedule summary 
-
+1. On the **Basics** tab, select **Subscription**, **Resource Group**, and all options in **Instance details**.
+	- Select **Add a schedule**. In **Add/Modify schedule**, specify the schedule details, such as:
+	
+		- **Start on**
+		- **Maintenance window** (in hours)
+		- **Repeats** (monthly, daily, or weekly)
+		- **Add end date**
+		- **Schedule summary**
 For Repeats monthly, there are two options: 
 
 Repeat on a calendar date (optionally run on the last date of the month). 
 
 Repeat on nth (first, second, etc.) x day (for example, Monday, Tuesday) of the month. You can also specify an offset from the day set. It could be +6/-6. For example, if you want to patch on the first Saturday after a patch on Tuesday, set the recurrence as the second Tuesday of the month with a +4 day offset. Optionally, you can also specify an end date when you want the schedule to expire. 
 
-On the Resources tab, Click  Add Resources , select your Subscription and then select your VM(s) then Save. 
+1. On the **Resources** tab, Click  Add Resources , select your Subscription and then select your VM(s) then **Save**. 
+
+1. On the **Updates** tab, specify the updates to include in the deployment, such as update classifications or KB ID/packages that must be installed when you trigger your schedule.
+
+	Update Manager doesn't support driver updates.
+
+1. You can continue with default settings for  Dynamic Scopes, Updates and Events tab for this Lab.  
+
+1. On the **Review + create** tab, verify your update deployment options, and then select **Create**.
+
 
 !! NOTE  
 
@@ -126,6 +116,10 @@ On the Review + create tab, verify your update deployment options, and then 
 Now you can check  the associated schedule to your machine on Azure Update Manager – Machines tab.  
 
  
+
+
+
+
 
 TASK 2: Attach a maintenance configuration 
 
