@@ -68,7 +68,8 @@ You can schedule updates from the **Overview** or **Machines** pane.
 		- **Repeats** (monthly, daily, or weekly)
 		- **Add end date**
 		- **Schedule summary**
-For Repeats monthly, there are two options: 
+
+For **Repeats monthly**, there are two options: 
 
 Repeat on a calendar date (optionally run on the last date of the month). 
 
@@ -86,42 +87,29 @@ Repeat on nth (first, second, etc.) x day (for example, Monday, Tuesday) of the 
 
 
 !! NOTE  
+> [!NOTE]
 
-## 
+> - If you get the warning below please read. Otherwise continue with the Next steps :   
+> - 
+> - You may get the below warning if you skip the  “Prerequisites for scheduled patching” Step2 . You can continue with “Change the required options to ensure schedule supportability” option. > - Basically it will enable ByPassPlatformSafetyChecksOnUserSchedule for you.  
 
-If you get the warning below please read. Otherwise continue with the Next steps :   
 
-You may get the below warning if you skip the  “Prerequisites for scheduled patching” Step2 . You can continue with “Change the required options to ensure schedule supportability” option. Basically it will enable ByPassPlatformSafetyChecksOnUserSchedule for you.  
+> - *Not all Azure machines shown in the preview are configured to schedule updates. 
 
+> -By opting for “Change the required options to ensure schedule supportability”, you are selecting the patch orchestration as "Customer Managed Schedules", which changes the patch mode to "AutomaticByPlatform" and enables ByPassPlatformSafetyChecksOnUserSchedule setting. These settings will ensure the machines are patched as per schedule and not autopatched *
+
+
+![error](image.png)
  
 
-Not all Azure machines shown in the preview are configured to schedule updates. 
+1. You can continue with default settings for  Dynamic Scopes, Updates and Events tab for this Lab.  
 
-By opting for “Change the required options to ensure schedule supportability”, you are selecting the patch orchestration as "Customer Managed Schedules", which changes the patch mode to "AutomaticByPlatform" and enables ByPassPlatformSafetyChecksOnUserSchedule setting. These settings will ensure the machines are patched as per schedule and not autopatched 
-
-A screenshot of a computer
-
-Description automatically generated 
-
- 
-
- 
-
-You can continue with default settings for  Dynamic Scopes, Updates and Events tab for this Lab.  
-
-On the Review + create tab, verify your update deployment options, and then select Create. 
-
- 
+1. On the Review + create tab, verify your update deployment options, and then select Create. 
 
 Now you can check  the associated schedule to your machine on Azure Update Manager – Machines tab.  
 
- 
 
-
-
-
-
-TASK 2: Attach a maintenance configuration 
+## TASK 2: Attach a maintenance configuration 
 
 A maintenance configuration can be attached to multiple machines. It can be attached to machines at the time of creating a new maintenance configuration or even after you create one. 
 
