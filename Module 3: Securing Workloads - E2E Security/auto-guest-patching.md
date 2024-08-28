@@ -88,13 +88,11 @@ Repeat on nth (first, second, etc.) x day (for example, Monday, Tuesday) of the 
 > [!NOTE]
 
 > - If you get the warning below please read. Otherwise continue with the Next steps :   
-> - 
-> - You may get the below warning if you skip the  “Prerequisites for scheduled patching” Step2 . You can continue with “Change the required options to ensure schedule supportability” option. > - Basically it will enable ByPassPlatformSafetyChecksOnUserSchedule for you.  
+>  
+>  You may get the below warning if you skip the  “Prerequisites for scheduled patching” Step2 . You can continue with “Change the required options to ensure schedule supportability” option. Basically it will enable ByPassPlatformSafetyChecksOnUserSchedule for you.  
 
 
-> - *Not all Azure machines shown in the preview are configured to schedule updates. 
-
-> - By opting for “Change the required options to ensure schedule supportability”, you are selecting the patch orchestration as "Customer Managed Schedules", which changes the patch mode to "AutomaticByPlatform" and enables ByPassPlatformSafetyChecksOnUserSchedule setting. These settings will ensure the machines are patched as per schedule and not autopatched *
+>  *Not all Azure machines shown in the preview are configured to schedule updates. By opting for “Change the required options to ensure schedule supportability”, you are selecting the patch orchestration as "Customer Managed Schedules", which changes the patch mode to "AutomaticByPlatform" and enables ByPassPlatformSafetyChecksOnUserSchedule setting. These settings will ensure the machines are patched as per schedule and not autopatched*
 
 
 ![error](image.png)
