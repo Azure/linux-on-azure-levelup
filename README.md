@@ -1,2 +1,3 @@
-# Level-Up-Linux-Lab
-A collection of modules for Linux Level Up 
+# Linux on Azure LevelUp FY25
+
+A collection of Modules for the Linux Level Up learning series.
