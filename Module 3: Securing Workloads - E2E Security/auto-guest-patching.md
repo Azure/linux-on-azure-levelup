@@ -95,7 +95,7 @@ Repeat on nth (first, second, etc.) x day (for example, Monday, Tuesday) of the 
 >  *Not all Azure machines shown in the preview are configured to schedule updates. By opting for “Change the required options to ensure schedule supportability”, you are selecting the patch orchestration as "Customer Managed Schedules", which changes the patch mode to "AutomaticByPlatform" and enables ByPassPlatformSafetyChecksOnUserSchedule setting. These settings will ensure the machines are patched as per schedule and not autopatched*
 
 
-![error](image.png)
+![error](err.png)
  
 
 9. You can continue with default settings for  Dynamic Scopes, Updates and Events tab for this Lab.  
@@ -107,46 +107,31 @@ Now you can check  the associated schedule to your machine on Azure Update Manag
 
 ## TASK 2: Attach a maintenance configuration 
 
-A maintenance configuration can be attached to multiple machines. It can be attached to machines at the time of creating a new maintenance configuration or even after you create one. 
+ A maintenance configuration can be attached to multiple machines. It can be attached to machines at the time of creating a new maintenance configuration or even after you create one.
 
-On the Azure Update Manager page, select Machines, and then select your subscription. 
+ 1. On the **Azure Update Manager** page, select **Machines**, and then select your subscription.
+ 1. Select your machine, and on the **Updates** pane, select **Scheduled updates** to create a maintenance configuration or attach an existing maintenance configuration to the scheduled recurring updates.
+1. On the **Scheduling** tab, select **Attach maintenance configuration**.
+1. Select the maintenance configuration that you want to attach, and then select **Attach**.
+1. On the **Updates** pane, select **Scheduling** > **Attach maintenance configuration**.
+1. On the **Attach existing maintenance configuration** page, select the maintenance configuration that you want to attach, and then select **Attach**.
 
-Select your machine, and on the Updates pane, select Scheduled updates to create a maintenance configuration or attach an existing maintenance configuration to the scheduled recurring updates. 
-
-On the Scheduling tab, select Attach maintenance configuration. 
-
-Select the maintenance configuration that you want to attach, and then select Attach. 
-
-On the Updates pane, select Scheduling > Attach maintenance configuration. 
-
-On the Attach existing maintenance configuration page, select the maintenance configuration that you want to attach, and then select Attach. 
-
- 
-
-Screenshot that shows Scheduled patching attach maintenance configuration. 
-
+![alt text](attachmc.png)
  
 
  
 
-TASK 3: Automate assessment at scale by using Azure Policy 
+## TASK 3: Automate assessment at scale by using Azure Policy 
 
-Go to Policy in the Azure portal and select Authoring > Definitions. 
+1. Go to **Policy** in the Azure portal and select **Authoring** > **Definitions**.
+1. From the **Category** dropdown, select **Update Manager**. Select **Configure periodic checking for missing system updates on Azure virtual machines** for Azure machines.
+1. When **Policy definition** opens, select **Assign**.
+1. On the **Basics** tab, select your subscription as your scope. You can also specify a resource group within your subscription as the scope. Select **Next**.
+1. On the **Parameters** tab, clear **Only show parameters that need input or review** so that you can see the values of parameters. In **Assessment** mode, select **AutomaticByPlatform** > **Operating system** > **Next**. You need to create separate policies for Windows and Linux.
+1. On the **Remediation** tab, select **Create a remediation task** so that periodic assessment is enabled on your machines. Select **Next**.
+1. On the **Non-compliance message** tab, provide the message that you want to see if there was noncompliance. For example, use **Your machine doesn't have periodic assessment enabled.** Select **Review + Create.**
+1. On the **Review + Create** tab, select **Create** to trigger **Assignment and Remediation Task** creation, which can take a minute or so.
 
-From the Category dropdown, select Update Manager. Select Configure periodic checking for missing system updates on Azure virtual machines for Azure machines. 
-
-When Policy definition opens, select Assign. 
-
-On the Basics tab, select your subscription as your scope. You can also specify a resource group within your subscription as the scope. Select Next. 
-
-On the Parameters tab, clear Only show parameters that need input or review so that you can see the values of parameters. In Assessment mode, select AutomaticByPlatform > Operating system > Next. You need to create separate policies for Windows and Linux. 
-
-On the Remediation tab, select Create a remediation task so that periodic assessment is enabled on your machines. Select Next. 
-
-On the Non-compliance message tab, provide the message that you want to see if there was noncompliance. For example, use Your machine doesn't have periodic assessment enabled. Select Review + Create. 
-
-On the Review + Create tab, select Create to trigger Assignment and Remediation Task creation, which can take a minute or so. 
-
-You can monitor the compliance of resources under Compliance and remediation status under Remediation on the Azure Policy home page. 
+You can monitor the compliance of resources under **Compliance** and remediation status under **Remediation** on the Azure Policy home page.
 
  
