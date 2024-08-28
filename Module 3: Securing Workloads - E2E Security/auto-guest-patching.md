@@ -84,9 +84,7 @@ Repeat on nth (first, second, etc.) x day (for example, Monday, Tuesday) of the 
 1. You can continue with default settings for  Dynamic Scopes, Updates and Events tab for this Lab.  
 
 1. On the **Review + create** tab, verify your update deployment options, and then select **Create**.
-
-
-!! NOTE  
+ 
 > [!NOTE]
 
 > - If you get the warning below please read. Otherwise continue with the Next steps :   
@@ -96,15 +94,15 @@ Repeat on nth (first, second, etc.) x day (for example, Monday, Tuesday) of the 
 
 > - *Not all Azure machines shown in the preview are configured to schedule updates. 
 
-> -By opting for “Change the required options to ensure schedule supportability”, you are selecting the patch orchestration as "Customer Managed Schedules", which changes the patch mode to "AutomaticByPlatform" and enables ByPassPlatformSafetyChecksOnUserSchedule setting. These settings will ensure the machines are patched as per schedule and not autopatched *
+> - By opting for “Change the required options to ensure schedule supportability”, you are selecting the patch orchestration as "Customer Managed Schedules", which changes the patch mode to "AutomaticByPlatform" and enables ByPassPlatformSafetyChecksOnUserSchedule setting. These settings will ensure the machines are patched as per schedule and not autopatched *
 
 
 ![error](image.png)
  
 
-1. You can continue with default settings for  Dynamic Scopes, Updates and Events tab for this Lab.  
+5. You can continue with default settings for  Dynamic Scopes, Updates and Events tab for this Lab.  
 
-1. On the Review + create tab, verify your update deployment options, and then select Create. 
+6. On the Review + create tab, verify your update deployment options, and then select Create. 
 
 Now you can check  the associated schedule to your machine on Azure Update Manager – Machines tab.  
 
