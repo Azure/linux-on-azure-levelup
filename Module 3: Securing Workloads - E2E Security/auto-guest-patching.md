@@ -50,7 +50,7 @@ To schedule recurring updates at scale, follow these steps.
 
 You can schedule updates from the **Overview** or **Machines** pane.
 
-# [From the Overview pane](#tab/schedule-updates-scale-overview)
+**From the Overview pane**
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 
