@@ -74,7 +74,16 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 | 10           | Once you hit "Create" a box will appear requesting you to download and create the SSH key pairs forthe three vm's. Save the zip file with the three keys to your comuter |
 | 11           | Monitor the deployment on your screen. The deployment should complete in a few minutes                                |
 | 12           | Unzip the file in your downloads folder to access the three SSH keys that were generated during the deployment        |                    
-| 13           |         
+| 13           | When the deployment completes access web-01 through Bastion and make sure to have access to your SSH key for that vm  |
+| 14           | In the Basrion access page make sure to change "VM Password" to "SSH Privae Key from local File". Enter the username from the deployment and click connect|
+| 15           | Once you gain access to vm type in the following command  sudo apt update && sudo apt upgrade -y and hit enter                     |
+| 16           | The system will begin to update with any required security updates. Wait until complete                                |
+| 17           | You will see a box appear requesting "Which services should be restarted?" Leave the items in the window selected and hit tab, hit OK, and hit enter          | 
+| 18           | Once that completes enter the following command sudo apt install apache2 -y and hit enter. the installation of the Apache web server will beigin |
+| 19           | You will see a window on your screen requesting "Which services should be restarted?" click tab and place a  * for user@1001.service. Click tab on your keyboard and select OK. Hit enter on your keyboard.                                                                                |
+| 20           | Validate that the Pache web server is running. Type the following command, sudo systemctl status apache2.service and hit enter      |
+| 21           | The status of the Apache daemon will appear on your screen. Enusre that you see "active running" which indicates it is running.     |
+| 22           | Type exit to logout of the server. Repeat the same exact same commands on web-02 to complete the web services forthis application   |
 
 
 
