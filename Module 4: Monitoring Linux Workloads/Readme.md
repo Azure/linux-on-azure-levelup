@@ -81,7 +81,7 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 | 17           | You will see a box appear requesting "Which services should be restarted?" Leave the items in the window selected and hit tab, hit OK, and hit enter          | 
 | 18           | Once that completes enter the following command sudo apt install apache2 -y and hit enter. the installation of the Apache web server will beigin |
 | 19           | You will see a window on your screen requesting "Which services should be restarted?" click tab and place a  * for user@1001.service. Click tab on your keyboard and select OK. Hit enter on your keyboard.                                                                                |
-| 20           | Validate that the Pache web server is running. Type the following command, sudo systemctl status apache2.service and hit enter      |
+| 20           | Validate that the Aache web server is running. Type the following command, sudo systemctl status apache2.service and hit enter      |
 | 21           | The status of the Apache daemon will appear on your screen. Enusre that you see "active running" which indicates it is running.     |
 | 22           | Type exit to logout of the server. Repeat the same exact same commands on web-02 to complete the web services forthis application   |
 
