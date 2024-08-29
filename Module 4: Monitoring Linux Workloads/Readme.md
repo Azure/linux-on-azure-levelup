@@ -106,8 +106,9 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 | 42           | Create a custom dashboard in the Azure portal and name LinuxLevelUp25. If you are unsure how to create a custom dashboard please review the following article [Create a new dashboard](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards#create-a-new-dashboard)  |
 | 43           | Within your Azure subscription click on Azure Monitor, then go to Insights, and select Virtual Machines                         |                                                                          
 | 44           | Click Configure Insights, the three virtual machines from the lab will be on the main blade with an Enable button next to each. Select "Enable" for each virtual machine one at a time.  |
-| 45           | You will be prompted once again to configure a new data collection rule                                                          |
-| 46           | Ensure
+| 45           | You will be prompted once again to configure a new data collection rule. Give it a memorable name and ensure you have a LogAnalytics in your azure subscription.                                                             |
+| 46           | Once the deployment has completed go back to Azure Monitor, under the Insights Blade, select Virtual Machines, and select Performance from the top row            |
+| 47           | If you click the Pin icon on each of the base counters created it will add it to the last dashboard that was open which you created earlier. Now you have the ability to add additional metrics in an adhoc manner to your custom dashboard. |
 
 
 
