@@ -84,7 +84,7 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 | 20           | Validate that the Aache web server is running. Type the following command, sudo systemctl status apache2.service and hit enter      |
 | 21           | The status of the Apache daemon will appear on your screen. Enusre that you see "active running" which indicates web services are running.     |
 | 22           | Type exit to logout of the server. Repeat the same exact same commands on web-02 to complete the web services for this application   |
-| 23           | Look for the Public IP of the Application Gate within the resource group. Take that IP and place it within your browser using HTTP. Example "http://<enter ip address >". The browser should render an Apapche splash page. Proceed to configuring the database. 
+| 23           | Look for the Public IP of the Application Gateway within the resource group. Take that IP and place it within your browser using HTTP. Example "http://<enter ip address >". The browser should render an Apapche splash page. The web tier is working properly. Proceed to configuring the database. 
 
 
 
