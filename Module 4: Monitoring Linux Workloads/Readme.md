@@ -121,3 +121,10 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 <a id="item-four"></a>
 
 ## Next Steps and Call to Action
+
+Thak you for participating in the session. We have a few links we encourage you to review and study further as your sechedule permits. 
+- [Azure Monitor Baseline Alerts Home Page](https://azure.github.io/azure-monitor-baseline-alerts/welcome/)
+- [Introduction to deploying the ALZ Pattern](https://azure.github.io/azure-monitor-baseline-alerts/patterns/alz/deploy/Introduction-to-deploying-the-ALZ-Pattern/)
+- [Azure Monitor Baseline Alerts GitHub Repo](https://github.com/Azure/azure-monitor-baseline-alerts/tree/main)
+- [CentOS End-Of-Life guidance](https://learn.microsoft.com/en-us/azure/virtual-machines/workloads/centos/centos-end-of-life)
+- 
