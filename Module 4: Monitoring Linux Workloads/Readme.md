@@ -64,7 +64,19 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 | :----------- | :--------------------------     |
 |  1           | Push Deploy to Azure Button [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAnthonyDelagarde%2FLinux-on-Azure-LevelUp-FY25%2Fmain%2FModule%25204%253A%2520Monitoring%2520Linux%2520Workloads%2Fautodeploy.json)|
 |  2           | Your Azure Subscription with a custom populated template should appear on your computer screen                                | 
-|  3           | Review the custom template and proceed to read each field. You have the options to leave the defaults or customize.  |    
+|  3           | Review the custom template and proceed to read each field. You have the options to leave the defaults or customize   | 
+|  4           | Create a new resource group or use an existing within your Azure subscription in the region of choice                |
+|  5           | PLEASE ADD UNIQUE NAMES for  Public IP's for both Applicaton Gateway and Bastion PIP                                 |
+|  6           | Below you will see the request to create three new SSH Public keys. In the forst one name it eb-01, second web-02, and the third db-01 in the name field |
+|  7           | Review and ensureall fields are named properly                                                                        |
+|  8           | Click Review + create                                                                                                 |
+|  9           | If there are no errors from the validation clock on the button "Create" to start the deployment                       |
+| 10           | Once you hit "Create" a box will appear requesting you to download and create the SSH key pairs forthe three vm's. Save the zip file with the three keys to your comuter |
+| 11           | Monitor the deployment on your screen. The deployment should complete in a few minutes                                |
+| 12           | Unzip the file in your downloads folder to access the three SSH keys that were generated during the deployment        |                    
+| 13           |         
+
+
 
 <!--heading-->
 <a id="item-four"></a>
