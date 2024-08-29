@@ -104,6 +104,10 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 | 40           | In this lab we will not go through the process of creating a new user accont or database on the Mariadb server. For this lab it is out of scope        |
 | 41           | You will need to create an action group to trigger alerts from Azure Monitor. Please follow this article to create an Action Group in the Portal if you are unaware on how to do this. [Create an action group in the Azure portal ](https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal)               |
 | 42           | Create a custom dashboard in the Azure portal and name LinuxLevelUp25. If you are unsure how to create a custom dashboard please review the following article [Create a new dashboard](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards#create-a-new-dashboard)  |
+| 43           | Within your Azure subscription click on Azure Monitor, then go to Insights, and select Virtual Machines                         |                                                                          
+| 44           | Click Configure Insights, the three virtual machines from the lab will be on the main blade with an Enable button next to each. Select "Enable" for each virtual machine one at a time.  |
+| 45           | You will be prompted once again to configure a new data collection rule                                                          |
+| 46           | Ensure
 
 
 
