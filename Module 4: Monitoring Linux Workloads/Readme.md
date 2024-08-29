@@ -88,8 +88,21 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 | 24           | Logon to db-01 using Bastion and the corresponding SSH keys                                                                          |
 | 25           | Please run the following command "sudo apt update && sudo apt upgrade -y and hit enter                                               |               
 | 26           | The system will begin to update. A window will appear asking "Which services should be restarted?" Accept the default selected and hit tab on your keyboard to ensure you are on the OK. Hit enter                                                                                                       |
-| 27           | Type the following command sudp apt install mariadb-server -y and hit enter. The installation of the database will start.            |
+| 27           | Type the following command sudo apt install mariadb-server -y and hit enter. The installation of the database will start.            |
 | 28           | A window will apear on the screen asking "Which services should be restarted?" Accept the defaults, hit tab to ensure you are on the OK and hit enter |
+| 29           | Next, start the Mariadb service by running the following command sudo systemctl start mariadb.service and hit enter                                   |
+| 30           | Validate that the Mariadb service has started. Run the following command sudo systemctl status mariadb.service and hit enter. The response should return "active (running)" |
+| 31           | For new MariaDB installations, the next step is to run the included security script. This script changes some of the less secure default options for things like remote root logins and sample users |
+| 32           | Run the following command sudo mysql_secure_installation and hit enter                                                                                 |
+| 33           | You will be prompted to enter a password for the Mariadb root account. Enter a strong password and hit enter                                           |
+| 34           | The next prompt you can select "n" and hit enter                                                                                                       |
+| 35           | The next prompt type "n" and hit enter as we have already assigned a password for theroot account. Hit enter                                           |
+| 36           | The next prompt will ask to remove anonymous users. Select "Y" for yes which is a good security practice                                               |
+| 37           | The next prompt will ask to remove the Mariadb root user ability to login remotely. Select "Y" for yes and this is also a good security practice.      |
+| 38           | The next prompt will ask to remove the test database and access to it. Select "Y" and hit enter                                                        |
+| 39           | The next screen will ask to reload the privileges table to apply the new changes to the Mariadb server. Select "Y" and hit enter                       |
+
+
 
 
 
