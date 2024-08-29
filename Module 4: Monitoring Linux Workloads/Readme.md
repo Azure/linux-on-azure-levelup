@@ -70,7 +70,7 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 |  6           | Below you will see the request to create three new SSH Public keys. In the forst one name it eb-01, second web-02, and the third db-01 in the name field |
 |  7           | Review and ensureall fields are named properly                                                                        |
 |  8           | Click Review + create                                                                                                 |
-|  9           | If there are no errors from the validation clock on the button "Create" to start the deployment                       |
+|  9           | If there are no errors from the validation click on the button "Create" to start the deployment                       |
 | 10           | Once you hit "Create" a box will appear requesting you to download and create the SSH key pairs forthe three vm's. Save the zip file with the three keys to your comuter |
 | 11           | Monitor the deployment on your screen. The deployment should complete in a few minutes                                |
 | 12           | Unzip the file in your downloads folder to access the three SSH keys that were generated during the deployment        |                    
