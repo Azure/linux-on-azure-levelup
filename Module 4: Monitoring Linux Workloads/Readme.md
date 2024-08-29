@@ -127,4 +127,4 @@ Thak you for participating in the session. We have a few links we encourage you 
 - [Introduction to deploying the ALZ Pattern](https://azure.github.io/azure-monitor-baseline-alerts/patterns/alz/deploy/Introduction-to-deploying-the-ALZ-Pattern/)
 - [Azure Monitor Baseline Alerts GitHub Repo](https://github.com/Azure/azure-monitor-baseline-alerts/tree/main)
 - [CentOS End-Of-Life guidance](https://learn.microsoft.com/en-us/azure/virtual-machines/workloads/centos/centos-end-of-life)
-- 
+- [Linux and Open Source on Azure Quarterly Update - July 2024](https://techcommunity.microsoft.com/t5/linux-and-open-source-blog/linux-and-open-source-on-azure-quarterly-update-july-2024/ba-p/4205386) 
