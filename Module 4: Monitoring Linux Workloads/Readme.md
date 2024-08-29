@@ -101,6 +101,8 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 | 37           | The next prompt will ask to remove the Mariadb root user ability to login remotely. Select "Y" for yes and this is also a good security practice.      |
 | 38           | The next prompt will ask to remove the test database and access to it. Select "Y" and hit enter                                                        |
 | 39           | The next screen will ask to reload the privileges table to apply the new changes to the Mariadb server. Select "Y" and hit enter                       |
+| 40           | In this lab we will not go through the process of creating a new user accont or database on the Mariadb server. For this lab it is out of scope        |
+| 41           | You will need to create an action group to trigger alerts from Azure Monitor. Please follow this article to create an Action Group in the Portal if you are unaware on how to do this. [Create an action group in the Azure portal ](https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal)               |
 
 
 
