@@ -67,7 +67,7 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 |  3           | Review the custom template and proceed to read each field. You have the options to leave the defaults or customize   | 
 |  4           | Create a new resource group or use an existing within your Azure subscription in the region of choice                |
 |  5           | PLEASE ADD UNIQUE NAMES for  Public IP's for both Applicaton Gateway and Bastion PIP                                 |
-|  6           | Below you will see the request to create three new SSH Public keys. In the forst one name it eb-01, second web-02, and the third db-01 in the name field |
+|  6           | Below you will see the request to create three new SSH Public keys. In the f1rst one name it web-01, second web-02, and the third db-01 in the name field |
 |  7           | Review and ensureall fields are named properly                                                                        |
 |  8           | Click Review + create                                                                                                 |
 |  9           | If there are no errors from the validation click on the button "Create" to start the deployment                       |
