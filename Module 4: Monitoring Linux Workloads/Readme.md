@@ -80,11 +80,19 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 | 16           | The system will begin to update with any required security updates. Wait until complete                                |
 | 17           | You will see a box appear requesting "Which services should be restarted?" Leave the items in the window selected and hit tab, hit OK, and hit enter          | 
 | 18           | Once that completes enter the following command sudo apt install apache2 -y and hit enter. the installation of the Apache web server will beigin |
-| 19           | You will see a window on your screen requesting "Which services should be restarted?" click tab and place a  * for user@1001.service. Click tab on your keyboard and select OK. Hit enter on your keyboard.                                                                                |
+| 19           | You will see a window on your screen requesting "Which services should be restarted?" click tab and place a  * for user@1001.service. Click tab on your keyboard and select OK. Hit enter on your keyboard                                                                                |
 | 20           | Validate that the Aache web server is running. Type the following command, sudo systemctl status apache2.service and hit enter      |
 | 21           | The status of the Apache daemon will appear on your screen. Enusre that you see "active running" which indicates web services are running.     |
 | 22           | Type exit to logout of the server. Repeat the same exact same commands on web-02 to complete the web services for this application   |
-| 23           | Look for the Public IP of the Application Gateway within the resource group. Take that IP and place it within your browser using HTTP. Example "http://enter ip address". The browser should render an Apapche splash page. The web tier is working properly. Proceed to configuring the database. 
+| 23           | Look for the Public IP of the Application Gateway within the resource group. Take that IP and place it within your browser using HTTP. Example "http://enter ip address". The browser should render an Apapche splash page. The web tier is working properly. Proceed to configuring the database 
+| 24           | Logon to db-01 using Bastion and the corresponding SSH keys                                                                          |
+| 25           | Please run the following command "sudo apt update && sudo apt upgrade -y and hit enter                                               |               
+| 26           | The system will begin to update. A window will appear asking "Which services should be restarted?" Accept the default selected and hit tab on your keyboard to ensure you are on the OK. Hit enter                                                                                                       |
+| 27           | Type the following command sudp apt install mariadb-server -y and hit enter. The installation of the database will start.            |
+| 28           | A window will apear on the screen asking "Which services should be restarted?" Accept the defaults, hit tab to ensure you are on the OK and hit enter |
+
+
+
 
 
 
