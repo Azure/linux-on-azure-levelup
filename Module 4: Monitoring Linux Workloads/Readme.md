@@ -5,7 +5,7 @@
 - [Monitoring Consideratiion](#item-one)
 - [Monitoring Recommendatons](#item-two)
 - [Linux Monitoring Lab](#item-three)
-- [Next Steps](#item-four)
+- [Next Steps and Call to Action](#item-four)
 
 ## Goal
 
@@ -99,4 +99,4 @@ In the upcoming lab, participants will engage in deploying resources within Azur
 <!--heading-->
 <a id="item-four"></a>
 
-## Next Steps
+## Next Steps and Call to Action
