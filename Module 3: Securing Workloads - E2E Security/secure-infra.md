@@ -2,7 +2,6 @@
 
 In this Lab we are going to deploy two virtual machines and configure Azure networking for these VMs.  Assume that the VMs are hosting a web application with a database back-end, however an application is not deployed in the Lab. You learn how to:
 
-> [!div class="checklist"]
 > * Create a virtual network and subnet
 > * Create Bastion Host
 > * Create a public IP address
