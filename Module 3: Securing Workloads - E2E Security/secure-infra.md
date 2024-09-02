@@ -50,20 +50,28 @@ az group create --name $RESOURCE_GROUP_NAME --location $REGION
 
 ### Create virtual network
 
-Use the [az network vnet create](/cli/azure/network/vnet) command to create a virtual network. In this example, the network is named *mvVNet-${SUFFIX}* and is given an address prefix of *10.0.0.0/16*. A subnet is also created with a name of *myFrontendSubnet* and a prefix of *10.0.1.0/24*. Later in this tutorial a front-end VM is connected to this subnet. 
+Use the [az network vnet create](/cli/azure/network/vnet) command to create a virtual network. In this example the network is named *mvVNet-${SUFFIX}* and is given an address prefix of *10.0.0.0/16*. A subnet is also created with a name of *myFrontendSubnet* and a prefix of *10.0.1.0/24*. Later in this tutorial a front-end VM is connected to this subnet. 
+
+In this step we re going to create the VNET named *mvVNet-${SUFFIX}* and a subnet named *myFrontendSubnet* and a prefix of *10.0.1.0/24*. We'll put a front-end VM in the *myFrontendSubnet* later in this lab. 
+See the below important features that we used while creating the VNET : 
+- Outbound Internet connection is disabled with  *--default-outbound false* flag.  By default outbound internet connection is open for the VNETs. A breaking change will be happen to disable default outbound internet connection as of on xyz date. 
+- VNET Encrytion is set with *--enable-encryption true* . This mean the VM traffic within the VNET will be encrypted. Virtual Network encryption is supported on general-purpose and memory optimized virtual machine instance sizes. The *--encryption-enforcement-policy * flag is for controlling if the VM ithout encryption is allowed in encrypted Virtual Network or not.
 
 ```azurecli-interactive 
 az network vnet create \
   --resource-group $RESOURCE_GROUP_NAME \
   --name $VNET_NAME \
   --address-prefix 10.0.0.0/16 \
+  --enable-encryption true \
+  --encryption-enforcement-policy allowUnencrypted \
+  --default-outbound false \
   --subnet-name myFrontendSubnet \
   --subnet-prefix 10.0.1.0/24
 ```
 
-### Create subnet
+### Create backend and bastion subnets
 
-A new subnet is added to the virtual network using the [az network vnet subnet create](/cli/azure/network/vnet/subnet) command. In this example, the subnet is named *myBackendSubnet* and is given an address prefix of *10.0.2.0/24*. This subnet is used with all back-end services.
+A new subnet is added to the virtual network using the [az network vnet subnet create](/cli/azure/network/vnet/subnet) command. In this example, the subnet is named *myBackendSubnet* and is given an address prefix of *10.0.2.0/24*. This subnet is used with all back-end services. We need to create this subnet seperatley since you can create only 1 subnet while you are creating the VNET. 
 
 ```azurecli-interactive 
 az network vnet subnet create \
@@ -73,13 +81,76 @@ az network vnet subnet create \
   --address-prefix 10.0.2.0/24
 ```
 
-At this point, a network has been created and segmented into two subnets, one for front-end services, and another for back-end services. In the next section, virtual machines are created and connected to these subnets.
+This will create a subnet for Azure Bastion.
 
-## Create a public IP address
+```bash
+export BASTION_SUBNET_NAME="AzureBastionSubnet"
+export BASTION_SUBNET_CIDR="10.0.3.0/26"
+
+az network vnet subnet create \
+    --name $BASTION_SUBNET_NAME \
+    --resource-group "$RESOURCE_GROUP_NAME" \
+    --vnet-name "$VNET_NAME" \
+    --address-prefix $BASTION_SUBNET_CIDR \
+    --query 'properties.provisioningState' \
+    --output tsv
+```
+
+At this point, a network has been created and segmented into three subnets, one for front-end services, one for back-end services and the last one is for bastion host. In the next section, virtual machines are created and connected to these subnets.
+
+
+### Extra settings 
+We're going to use EncryptionAtHost feature while creating our VMs. This settings is for using the Host Based Encryption to encrypt the disks on your VM. 
+You must enable the feature for your subscription before you use the EncryptionAtHost property for your VM/VMSS. Use the following steps to enable the feature for your subscription:
+
+Execute the following command to register the feature for your subscription
+
+```bash
+az feature register --namespace Microsoft.Compute --name EncryptionAtHost
+```
+
+### Create cloud-init file
+We're going ti use the front-end VM at our next Lab. Installing some prerequisetes like firewall(ufw) , apparmor* etc. 
+
+```bash
+cat << EOF > cloud-init.txt
+#cloud-config
+# Install, update, and upgrade packages
+package_upgrade: true
+package_update: true
+package_reboot_if_require: true
+# Install packages
+packages:
+  - vim
+  - ufw
+  - curl
+  - bash-completion
+  - nginx
+  - pwgen
+  - libpam-pwquality
+  - haveged rng-tools5
+  - wget 
+  - apt-transport-https 
+  - gnupg
+  - apparmor 
+  - apparmor-utils 
+  - apparmor-profiles
+EOF
+```
+
+### Generate SSH key pair using ED25519 encryption
+
+ED25519 ssh keys are public preview now. You can use ED25519 or RSA keys. ED25519 ssh keys provides better security and performance. The following command creates an SSH key pair using ED25519 encryption with a fixed length of 256 bits:
+
+```bash
+ssh-keygen -m PEM -t ed25519 -f $HOME/id_ed25519_levelup_key.pem.pub -C "LevelUp Linux VM SSH Key"
+```
+## Create a public IP address for frontend VM
 
 ```azurecli-interactive
 az network public-ip create --resource-group $RESOURCE_GROUP_NAME --name myPublicIPAddress
 ```
+
 
 ## Create a front-end VM
 
@@ -94,8 +165,32 @@ az vm create \
   --nsg myFrontendNSG \
   --public-ip-address myPublicIPAddress \
   --image $VM_IMAGE \
-  --generate-ssh-keys
+  --assign-identity \
+  --accelerated-networking true \
+  --storage-sku os=Premium_LRS \
+  --encryption-at-host true \
+  --os-disk-caching ReadWrite \
+  --os-disk-delete-option Delete \
+  --os-disk-size-gb 30 \
+  --admin-username $VM_ADMIN_USER \
+  --authentication-type ssh \
+  --ssh-key-value "$HOME/id_ed25519_levelup_key.pem.pub" \
+  --custom-data cloud-init.txt \
+  --output tsv
 ```
+### Enable Azure AD Login for a Linux virtual machine in Azure
+
+The following code example deploys a Linux VM and then installs the extension to enable an Azure AD Login for a Linux VM. VM extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines.
+
+```bash
+az vm extension set \
+    --publisher Microsoft.Azure.ActiveDirectory \
+    --name AADSSHLoginForLinux \
+    --resource-group $MY_RESOURCE_GROUP_NAME \
+    --vm-name myFrontendVM \
+    --output tsv
+```
+
 
 ## Secure network traffic
 
@@ -148,6 +243,40 @@ The front-end VM is only accessible on port *22*, port *80* and port *443*. All 
 
 ```azurecli-interactive 
 az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myFrontendNSG --output table
+```
+
+### Configure role assignments for the VM
+
+The following example uses az role assignment create to assign the Virtual Machine Administrator Login role to the VM for your current Azure user. You obtain the username of your current Azure account by using az account show, and you set the scope to the VM created in a previous step by using az vm show.
+
+You can also assign the scope at a resource group or subscription level. Normal Azure RBAC inheritance permissions apply.
+
+```bash
+USERNAME=$(az account show --query user.name --output tsv)
+
+az role assignment create --role "Virtual Machine Administrator Login" --assignee $USERNAME --scope $RESOURCE_GROUP_NAME
+```
+
+### Install the SSH extension for the Azure CLI
+
+Run the following command to add the SSH extension for the Azure CLI:
+
+```bash
+az extension add --name ssh
+```
+
+### Log in by using a Microsoft Entra user account to SSH into the Linux VM
+
+```bash
+az ssh vm --name $VM_NAME --resource-group $RESOURCE_GROUP_NAME
+```
+
+### Export the SSH configuration for use with SSH clients that support OpenSSH
+
+Sign in to Azure Linux VMs with Microsoft Entra ID supports exporting the OpenSSH certificate and configuration. That means you can use any SSH clients that support OpenSSH-based certificates to sign in through Microsoft Entra ID. The following example exports the configuration for all IP addresses assigned to the VM:
+
+```bash
+az ssh config --file ~/.ssh/config --name $VM_NAME --resource-group $RESOURCE_GROUP_NAME
 ```
 
 ### Secure VM to VM traffic
@@ -204,6 +333,50 @@ az network nsg rule create \
   --destination-address-prefix "*" \
   --destination-port-range "*"
 ```
+
+
+### Create public IP address for Azure NAT Gateway
+
+The backend VM does not need a public IP, we are going to add a NAT Gateway for Outbound Internet connection. We're adding this just for LAB purposes to show how you can use NAT GW to allow outbound internet connection implicitly. 
+
+```bash
+export NAT_PUBLIC_IP_NAME="nat-ip-levelup-${SUFFIX}"
+
+az network public-ip create \
+    --name "$NAT_PUBLIC_IP_NAME" \
+    --resource-group "$RESOURCE_GROUP_NAME" \
+    --location $REGION \
+    --allocation-method Static \
+    --sku Standard \
+    --version IPv4 \
+    --zone 1 2 3 \
+    --output tsv
+```
+
+### Create NAT gateway resource
+
+```bash
+export NAT_GW_NAME="nat-levelup-${SUFFIX}"
+
+az network nat gateway create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --name $NAT_GW_NAME \
+    --public-ip-addresses $NAT_PUBLIC_IP_NAME \
+    --idle-timeout 10 \
+    --location $REGION \
+    --output tsv
+```
+
+### Configure NAT gateway for the backend subnet
+
+```bash
+az network vnet subnet update \
+    --name myBackendSubnet \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --vnet-name $VNET_NAME \
+    --nat-gateway $NAT_GW_NAME
+```
+
 
 ## Create back-end VM
 
