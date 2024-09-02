@@ -140,7 +140,7 @@ az network nsg rule create \
   --source-address-prefix "*" \
   --source-port-range "*" \
   --destination-address-prefix "*" \
-  --destination-port-ranges 80 443
+  --destination-port-ranges 80 443 22
 ```
 
 The front-end VM is only accessible on port *22*, port *80* and port *443*. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the [az network rule list](/cli/azure/network/nsg/rule) command. 
