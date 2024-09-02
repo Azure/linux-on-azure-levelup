@@ -40,7 +40,8 @@ Set the following variables to create the Azure resources.
 export SUFFIX=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 export RESOURCE_GROUP_NAME="rg-levelup-${SUFFIX}"
 export VNET_NAME="mvVNet-${SUFFIX}"
-export REGION="westus3"
+export VM_IMAGE="Canonical:ubuntu-24_04-lts:server:latest"
+export REGION="swedencentral"
 ```
 
 ```azurecli-interactive 
@@ -92,7 +93,7 @@ az vm create \
   --subnet myFrontendSubnet \
   --nsg myFrontendNSG \
   --public-ip-address myPublicIPAddress \
-  --image Ubuntu2404 \
+  --image $VM_IMAGE \
   --generate-ssh-keys
 ```
 
@@ -140,7 +141,7 @@ az network nsg rule create \
   --source-address-prefix "*" \
   --source-port-range "*" \
   --destination-address-prefix "*" \
-  --destination-port-ranges 80 443 22
+  --destination-port-ranges 80 443
 ```
 
 The front-end VM is only accessible on port *22*, port *80* and port *443*. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the [az network rule list](/cli/azure/network/nsg/rule) command. 
@@ -216,7 +217,7 @@ az vm create \
   --subnet myBackendSubnet \
   --public-ip-address "" \
   --nsg "" \
-  --image Ubuntu2404 \
+  --image $VM_IMAGE \
   --generate-ssh-keys
 ```
 
