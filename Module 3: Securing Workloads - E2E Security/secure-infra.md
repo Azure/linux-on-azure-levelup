@@ -76,7 +76,7 @@ az network vnet subnet create \
 ```
 
 ### Create backend and bastion subnets
-
+ 
 A new subnet is added to the virtual network using the [az network vnet subnet create](/cli/azure/network/vnet/subnet) command. In this example, the subnet is named *myBackendSubnet* and is given an address prefix of *10.0.2.0/24*. This subnet is used with all back-end services. We need to create this subnet seperatley since you can create only 1 subnet while you are creating the VNET. 
 
 ```azurecli-interactive 
@@ -102,6 +102,7 @@ az network vnet subnet create \
     --query 'properties.provisioningState' \
     --output tsv
 ```
+
 
 At this point, a network has been created and segmented into three subnets, one for front-end services, one for back-end services and the last one is for bastion host. In the next section, virtual machines are created and connected to these subnets.
 
@@ -196,7 +197,7 @@ The following code example deploys a Linux VM and then installs the extension to
 az vm extension set \
     --publisher Microsoft.Azure.ActiveDirectory \
     --name AADSSHLoginForLinux \
-    --resource-group $MY_RESOURCE_GROUP_NAME \
+    --resource-group $RESOURCE_GROUP_NAME \
     --vm-name myFrontendVM \
     --output tsv
 ```
@@ -389,7 +390,43 @@ az network vnet subnet update \
     --nat-gateway $NAT_GW_NAME
 ```
 
+## Create Azure Bastion Host
 
+### Create Azure Public IP for Bastion Host
+
+```bash
+export BASTION_NAME="bastion-levelup-${SUFFIX}"
+export BASTION_PUBLIC_IP_NAME="bastion-ip-levelup-${SUFFIX}"
+
+az network public-ip create \
+    --name "$BASTION_PUBLIC_IP_NAME" \
+    --resource-group "$RESOURCE_GROUP_NAME" \
+    --location $REGION \
+    --allocation-method Static \
+    --sku Standard \
+    --dns-name "$BASTION_NAME" \
+    --sku Standard \
+    --version IPv4 \
+    --zone 1 2 3 \
+    --allocation-method Static \
+    --output tsv
+```
+
+### Create Azure Bastion Host with native client support and IP-based connections
+
+```bash
+az network bastion create \
+    --name "$BASTION_NAME" \
+    --resource-group "$RESOURCE_GROUP_NAME" \
+    --vnet-name "$VNET_NAME" \
+    --location "$REGION" \
+    --public-ip-address "$BASTION_PUBLIC_IP_NAME" \
+    --enable-ip-connect true \
+    --enable-tunneling true \
+    --sku Standard \
+    --query 'properties.provisioningState' \
+    --output tsv
+  ```  
 ## Create back-end VM
 
 Now create a virtual machine, which is attached to the *myBackendSubnet*. Notice that the `--nsg` argument has a value of empty double quotes. An NSG does not need to be created with the VM. The VM is attached to the back-end subnet, which is protected with the pre-created back-end NSG. This NSG applies to the VM. Also, notice here that the `--public-ip-address` argument has a value of empty double quotes. This configuration creates a VM without a public IP address. 
