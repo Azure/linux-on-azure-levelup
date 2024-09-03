@@ -71,7 +71,6 @@ az network vnet subnet create \
   --resource-group $RESOURCE_GROUP_NAME \
   --vnet-name $VNET_NAME \
   --name myFrontendSubnet \
-  --default-outbound false \
   --address-prefix 10.0.1.0/24
 ```
 
@@ -84,6 +83,7 @@ az network vnet subnet create \
   --resource-group $RESOURCE_GROUP_NAME \
   --vnet-name $VNET_NAME \
   --name myBackendSubnet \
+  --default-outbound false \
   --address-prefix 10.0.2.0/24
 ```
 
