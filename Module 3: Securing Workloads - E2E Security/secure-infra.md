@@ -438,8 +438,18 @@ az vm create \
   --vnet-name $VNET_NAME \
   --subnet myBackendSubnet \
   --public-ip-address "" \
+  --assign-identity \
   --nsg "" \
   --image $VM_IMAGE \
+  --assign-identity \
+  --accelerated-networking true \
+  --storage-sku os=Premium_LRS \
+  --encryption-at-host true \
+  --os-disk-caching ReadWrite \
+  --os-disk-delete-option Delete \
+  --os-disk-size-gb 30 \
+  --admin-username $VM_ADMIN_USER \
+  --authentication-type ssh \
   --generate-ssh-keys
 ```
 
@@ -447,4 +457,11 @@ The back-end VM is only accessible on port *22* and port *3306* from the front-e
 
 ```azurecli-interactive 
 az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myBackendNSG --output table
+```
+Connect to myBackendVM with your AD account through the Bastion Host we created above .
+
+Get the Resource ID for the VM to which you want to connect. The Resource ID can be easily located in the Azure portal. Go to the Overview page for your VM and select the JSON View link to open the Resource JSON. Copy the Resource ID at the top of the page to your clipboard to use later when connecting to your VM.
+
+```azurecli-interactive 
+az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAME --target-resource-id "<VMResourceId or VMSSInstanceResourceId>" --auth-type "AAD"
 ```
