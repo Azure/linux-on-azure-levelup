@@ -26,7 +26,7 @@ There isn’t definitive list of what you should monitor when you deploy somethi
 - Are there any external dependencies that are critical for the application to operate as intended
 - Identify the application personas. Will access come from internal or external networks
 - How will users authenticate against the application?
-- Review if the customer administration model. Understand the required RBAC roles to implement Azure Monitor. Please review the following guidance [Roles, permissions, and security in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/roles-permissions-security)
+- Review the customer administration model. Understand the required RBAC roles to implement Azure Monitor. Please review the following guidance [Roles, permissions, and security in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/roles-permissions-security)
 - Understand the customers industry vertical to validate if there are specific regulatory requirements and monitoring retention required
 - Validate name resolution in relation to the Linux workload as well as ancilliary services that interact with the specified workloads
 - Has redundancy been implemented in the design and are there any SLA’s?
