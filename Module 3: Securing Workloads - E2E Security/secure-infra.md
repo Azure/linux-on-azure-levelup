@@ -40,6 +40,7 @@ Set the following variables to create the Azure resources.
 export SUFFIX=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 export RESOURCE_GROUP_NAME="rg-levelup-${SUFFIX}"
 export VNET_NAME="mvVNet-${SUFFIX}"
+export VM_ADMIN_USER="azureuser"
 export VM_IMAGE="Canonical:ubuntu-24_04-lts:server:latest"
 export REGION="swedencentral"
 ```
@@ -114,6 +115,9 @@ Execute the following command to register the feature for your subscription
 ```bash
 az feature register --namespace Microsoft.Compute --name EncryptionAtHost
 ```
+Once the feature 'EncryptionAtHost' is registered, invoking 'az provider register -n Microsoft.Compute' is required to get the change propagated
+
+
 
 ### Create cloud-init file
 We're going ti use the front-end VM at our next Lab. Installing some prerequisetes like firewall(ufw) , apparmor* etc. 
@@ -149,7 +153,7 @@ EOF
 ED25519 ssh keys are public preview now. You can use ED25519 or RSA keys. ED25519 ssh keys provides better security and performance. The following command creates an SSH key pair using ED25519 encryption with a fixed length of 256 bits:
 
 ```bash
-ssh-keygen -m PEM -t ed25519 -f $HOME/id_ed25519_levelup_key.pem.pub -C "LevelUp Linux VM SSH Key"
+ssh-keygen -m PEM -t ed25519 -f $HOME/id_ed25519_levelup_key.pem -C "LevelUp Linux VM SSH Key"
 ```
 ## Create a public IP address for frontend VM
 
