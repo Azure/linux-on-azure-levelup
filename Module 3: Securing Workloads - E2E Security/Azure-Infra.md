@@ -40,7 +40,6 @@ az network vnet create \
     --tags $TAGS \
     --enable-encryption true \
     --encryption-enforcement-policy allowUnencrypted \
-    --default-outbound false \
     --output tsv
 ```
 
@@ -106,8 +105,20 @@ az network nat gateway create \
     --public-ip-addresses $NAT_PUBLIC_IP_NAME \
     --idle-timeout 10 \
     --location $REGION \
-    --tags $TAGS \
     --output tsv
+```
+### Add Tag to NAT gateway resource
+
+```bash
+export NAT_GATEWAY_ID=$(az network nat gateway show \
+  --resource-group $RESOURCE_GROUP_NAME \
+  --name $NAT_GW_NAME \
+  --query id -o tsv)
+
+az tag create \
+  --resource-id $NAT_GATEWAY_ID \
+  --tags owner=user
+
 ```
 
 ### Configure NAT gateway for the VM subnet
@@ -211,9 +222,9 @@ ssh-keygen -m PEM -t ed25519 -f $HOME/id_ed25519_levelup_key.pem.pub -C "LevelUp
 Security rules in network security groups enable you to filter the type of network traffic that can flow in and out of virtual network subnets and network interfaces. To learn more about network security groups.
 
 ```bash
-export NSG_NAME="NSG$RANDOM_ID"
-export NSG_RULE_NAME="Allow-Access$RANDOM_ID"
-export MY_VM_NIC_NAME="VMNic$RANDOM_ID"
+export NSG_NAME="NSG-${SUFFIX}"
+export NSG_RULE_NAME="Allow-Access-${SUFFIX}"
+export VM_NIC_NAME="VMNic-${SUFFIX}"
 
 az network nsg create \
     --name $NSG_NAME \
@@ -255,7 +266,6 @@ az network nic create \
     --subnet $VM_SUBNET_NAME \
     --vnet-name $VNET_NAME \
     --network-security-group $NSG_NAME \
-    --public-ip-address "" \
     --output tsv
 ```
 
@@ -274,9 +284,8 @@ az vm create \
     --size $VM_SIZE \
     --assign-identity \
     --image $VM_IMAGE \
-    --nics $MY_VM_NIC_NAME \
+    --nics $VM_NIC_NAME \
     --nic-delete-option Delete \
-    --accelerated-networking true \
     --storage-sku os=Premium_LRS \
     --encryption-at-host true \
     --os-disk-caching ReadWrite \
@@ -284,7 +293,7 @@ az vm create \
     --os-disk-size-gb 30 \
     --admin-username $VM_ADMIN_USER \
     --authentication-type ssh \
-    --ssh-key-value "$HOME/id_ed25519_levelup_key.pem.pub" \
+    --ssh-key-value "$HOME/id_ed25519_levelup_key.pem.pub.pub" \
     --tags $TAGS \
     --custom-data cloud-init.txt \
     --output tsv
@@ -298,8 +307,8 @@ The following code example deploys a Linux VM and then installs the extension to
 az vm extension set \
     --publisher Microsoft.Azure.ActiveDirectory \
     --name AADSSHLoginForLinux \
-    --resource-group $MY_RESOURCE_GROUP_NAME \
-    --vm-name $MY_VM_NAME \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --vm-name $VM_NAME \
     --output tsv
 ```
 
@@ -311,8 +320,11 @@ You can also assign the scope at a resource group or subscription level. Normal 
 
 ```bash
 USERNAME=$(az account show --query user.name --output tsv)
+RESOURCE_GROUP_ID=$(az group show --name $RESOURCE_GROUP_NAME --query id 
+--output tsv)
+VM_RESOURCE_ID=$(az vm show --name $VM_NAME --resource-group $RESOURCE_GROUP_NAME --query id --output tsv)
 
-az role assignment create --role "Virtual Machine Administrator Login" --assignee $USERNAME --scope $RESOURCE_GROUP_NAME
+az role assignment create --role "Virtual Machine Administrator Login" --assignee $USERNAME --scope $RESOURCE_GROUP_ID
 ```
 
 ### Install the SSH extension for the Azure CLI
@@ -323,10 +335,28 @@ Run the following command to add the SSH extension for the Azure CLI:
 az extension add --name ssh
 ```
 
-### Log in by using a Microsoft Entra user account to SSH into the Linux VM
+### Log in by using a Microsoft Entra user account to SSH via Bastion into the Linux VM with Azure CLI
+
+This requires Bastion extension, you will be prompted to install if missing.
 
 ```bash
-az ssh vm --name $VM_NAME --resource-group $RESOURCE_GROUP_NAME
+az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAME --target-resource-id $VM_RESOURCE_ID --auth-type "AAD" --username $USERNAME
+```
+
+### Log in  by using a Microsoft Entra user account to SSH via Bastion using Bastion tunnel and local SSH client
+
+Create Bastion tunnel using AZ CLI
+
+```
+az network bastion tunnel --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAME --target-resource-id $VM_RESOURCE_ID --auth-type "AAD" --username $USERNAME
+
+```
+
+Use local SSH client to connect to VM
+
+```
+ssh user@127.0.0.1
+
 ```
 
 ### Export the SSH configuration for use with SSH clients that support OpenSSH
