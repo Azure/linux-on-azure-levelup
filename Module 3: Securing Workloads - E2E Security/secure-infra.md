@@ -64,6 +64,7 @@ az network vnet create \
   --address-prefix 10.0.0.0/16 \
   --enable-encryption true \
   --encryption-enforcement-policy allowUnencrypted 
+```
 
 ```azurecli-interactive 
 az network vnet subnet create \
@@ -72,7 +73,6 @@ az network vnet subnet create \
   --name myFrontendSubnet \
   --default-outbound false \
   --address-prefix 10.0.1.0/24
-  
 ```
 
 ### Create backend and bastion subnets
