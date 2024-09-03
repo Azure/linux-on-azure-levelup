@@ -285,6 +285,8 @@ Network security group rules can also apply between VMs. For this example, the f
 
 Use the [az network nsg rule create](/cli/azure/network/nsg/rule) command to create a rule for port 22. Notice that the `--source-address-prefix` argument specifies a value of *10.0.1.0/24*. This configuration ensures that only traffic from the front-end subnet is allowed through the NSG.
 
+NSG rule for Bastion subnet 
+
 ```azurecli-interactive 
 az network nsg rule create \
   --resource-group $RESOURCE_GROUP_NAME \
@@ -294,7 +296,7 @@ az network nsg rule create \
   --protocol Tcp \
   --direction Inbound \
   --priority 100 \
-  --source-address-prefix 10.0.1.0/24 \
+  --source-address-prefix 10.0.3.0/26 \
   --source-port-range "*" \
   --destination-address-prefix "*" \
   --destination-port-range "22"
