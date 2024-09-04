@@ -1,5 +1,4 @@
 
-# WIP - Not ready for testing
 # Lab 1: Create Linux VMs in a Secure Environment 
 
 In this Lab we are going to deploy two virtual machines and configure Azure networking for these VMs.  Assume that the VMs are hosting a web application with a database back-end, however an application is not deployed in the Lab. You learn how to:
@@ -14,10 +13,10 @@ In this Lab we are going to deploy two virtual machines and configure Azure netw
 
 ## VM networking overview
 
-In this Lab We'll create 2 subnets for traffic segmentation, one for front-end VM and one for backend-vm  
+In this Lab We'll create 3 subnets for traffic segmentation, one for front-end VM, one for backend-vm and third one is for Azure Bastion host.  
 At the end of the Lab the following virtual network resources are created:
 
-- *myVNet* - The virtual network that the VMs use to communicate with each other and the internet.
+- *myVNet-${SUFFIX}* - The virtual network that the VMs use to communicate with each other and the internet.
 - *myFrontendSubnet* - The subnet in *myVNet* used by the front-end resources.
 - *myPublicIPAddress* - The public IP address used to access *myFrontendVM* from the internet.
 - *myFrontentNic* - The network interface used by *myFrontendVM* to communicate with *myBackendVM*.
@@ -25,13 +24,13 @@ At the end of the Lab the following virtual network resources are created:
 - *myBackendNSG* - The network security group that controls communication between the *myFrontendVM* and *myBackendVM*.
 - *myBackendSubnet* - The subnet associated with *myBackendNSG* and used by the back-end resources.
 - *myBackendNic* - The network interface used by *myBackendVM* to communicate with *myFrontendVM*.
-- *myBackendVM* - The VM that uses port 22 and 3306 to communicate with *myFrontendVM*.
+- *myBackendVM* - The VM that uses 3306 to communicate with *myFrontendVM*.
 
 ## Create a virtual network and subnet
 
 For this tutorial, a single virtual network is created with two subnets. A front-end subnet for hosting a web application, and a back-end subnet for hosting a database server.
 
-Before you can create a virtual network, create a resource group with [az group create](/cli/azure/group). The following example creates a resource group named *myRGNetwork* in the eastus location.
+Before you can create a virtual network, create a resource group with *az group create*. The following example creates a resource group named *rg-levelup-${SUFFIX}* in the swedencentral location.
 ## Variables
 
 Set the following variables to create the Azure resources.
@@ -51,7 +50,7 @@ az group create --name $RESOURCE_GROUP_NAME --location $REGION
 
 ### Create virtual network
 
-Use the [az network vnet create](/cli/azure/network/vnet) command to create a virtual network. In this example the network is named *mvVNet-${SUFFIX}* and is given an address prefix of *10.0.0.0/16*. A subnet is also created with a name of *myFrontendSubnet* and a prefix of *10.0.1.0/24*. Later in this tutorial a front-end VM is connected to this subnet. 
+Use the *az network vnet create* command to create a virtual network. In this example the network is named *mvVNet-${SUFFIX}* and is given an address prefix of *10.0.0.0/16*. A subnet is also created with a name of *myFrontendSubnet* and a prefix of *10.0.1.0/24*. Later in this tutorial a front-end VM is connected to this subnet. 
 
 In this step we re going to create the VNET named *mvVNet-${SUFFIX}* and a subnet named *myFrontendSubnet* and a prefix of *10.0.1.0/24*. We'll put a front-end VM in the *myFrontendSubnet* later in this lab. 
 See the below important features that we used while creating the VNET : 
@@ -64,7 +63,8 @@ az network vnet create \
   --name $VNET_NAME \
   --address-prefix 10.0.0.0/16 \
   --enable-encryption true \
-  --encryption-enforcement-policy allowUnencrypted 
+  --encryption-enforcement-policy allowUnencrypted \
+  --location $REGION
 ```
 
 ```azurecli-interactive 
@@ -77,7 +77,7 @@ az network vnet subnet create \
 
 ### Create backend and bastion subnets
  
-A new subnet is added to the virtual network using the [az network vnet subnet create](/cli/azure/network/vnet/subnet) command. In this example, the subnet is named *myBackendSubnet* and is given an address prefix of *10.0.2.0/24*. This subnet is used with all back-end services. We need to create this subnet seperatley since you can create only 1 subnet while you are creating the VNET. 
+A new subnet is added to the virtual network using the *az network vnet subnet create* command. In this example, the subnet is named *myBackendSubnet* and is given an address prefix of *10.0.2.0/24*. This subnet is used with all back-end services. 
 
 ```azurecli-interactive 
 az network vnet subnet create \
@@ -165,7 +165,7 @@ az network public-ip create --resource-group $RESOURCE_GROUP_NAME --name myPubli
 
 ## Create a front-end VM
 
-Use the [az vm create](/cli/azure/vm) command to create the VM named *myFrontendVM* using *myPublicIPAddress*.
+Use the *az vm create* command to create the VM named *myFrontendVM* using *myPublicIPAddress*.
 
 ```azurecli-interactive 
 az vm create \
@@ -207,11 +207,11 @@ az vm extension set \
 
 ### Create network security groups
 
-A network security group can be created at the same time as a VM using the [az vm create](/cli/azure/vm) command. When doing so, the NSG is associated with the VMs network interface and an NSG rule is auto created to allow traffic on port *22* from any source. Earlier in this lab the front-end NSG was auto-created with the front-end VM. An NSG rule was also auto created for port 22. 
+A network security group can be created at the same time as a VM using the *az vm create* command. When doing so, the NSG is associated with the VMs network interface and an NSG rule is auto created to allow traffic on port *22* from any source. Earlier in this lab the front-end NSG was auto-created with the front-end VM. An NSG rule was also auto created for port 22. 
 
 In some cases, it may be helpful to pre-create an NSG, such as when default SSH rules should not be created, or when the NSG should be attached to a subnet. 
 
-Use the [az network nsg create](/cli/azure/network/nsg) command to create a network security group.
+Use the *az network nsg create* command to create a network security group.
 
 ```azurecli-interactive 
 az network nsg create --resource-group $RESOURCE_GROUP_NAME --name myBackendNSG
@@ -233,7 +233,7 @@ az network vnet subnet update \
 
 When the front-end VM was created, an NSG rule was created to allow incoming traffic on port 22. This rule allows SSH connections to the VM. For this example, traffic should also be allowed on ports *80* and *443*. This configuration allows a web application to be accessed on the VM.
 
-Use the [az network nsg rule create](/cli/azure/network/nsg/rule) command to create a rule for port *80*.
+Use the *az network nsg rule create* command to create a rule for port *80* and *443*.
 
 ```azurecli-interactive 
 az network nsg rule create \
@@ -250,7 +250,7 @@ az network nsg rule create \
   --destination-port-ranges 80 443
 ```
 
-The front-end VM is only accessible on port *22*, port *80* and port *443*. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the [az network rule list](/cli/azure/network/nsg/rule) command. 
+The front-end VM is only accessible on port *22*, port *80* and port *443*. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the *az network rule list* command. 
 
 ```azurecli-interactive 
 az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myFrontendNSG --output table
@@ -264,8 +264,9 @@ You can also assign the scope at a resource group or subscription level. Normal 
 
 ```bash
 USERNAME=$(az account show --query user.name --output tsv)
+SCOPE=$(az group show -n  $RESOURCE_GROUP_NAME  -o tsv --query id)
 
-az role assignment create --role "Virtual Machine Administrator Login" --assignee $USERNAME --scope $RESOURCE_GROUP_NAME
+az role assignment create --role "Virtual Machine Administrator Login" --assignee $USERNAME --scope $SCOPE
 ```
 
 ### Install the SSH extension for the Azure CLI
@@ -279,7 +280,7 @@ az extension add --name ssh
 ### Log in by using a Microsoft Entra user account to SSH into the Linux VM
 
 ```bash
-az ssh vm --name $VM_NAME --resource-group $RESOURCE_GROUP_NAME
+az ssh vm --name myFrontendVM --resource-group $RESOURCE_GROUP_NAME
 ```
 
 ### Export the SSH configuration for use with SSH clients that support OpenSSH
@@ -287,14 +288,14 @@ az ssh vm --name $VM_NAME --resource-group $RESOURCE_GROUP_NAME
 Sign in to Azure Linux VMs with Microsoft Entra ID supports exporting the OpenSSH certificate and configuration. That means you can use any SSH clients that support OpenSSH-based certificates to sign in through Microsoft Entra ID. The following example exports the configuration for all IP addresses assigned to the VM:
 
 ```bash
-az ssh config --file ~/.ssh/config --name $VM_NAME --resource-group $RESOURCE_GROUP_NAME
+az ssh config --file ~/.ssh/config --name myFrontendVM --resource-group $RESOURCE_GROUP_NAME
 ```
 
 ### Secure VM to VM traffic
 
 Network security group rules can also apply between VMs. For this example, the front-end VM needs to communicate with the back-end VM on port *22* and *3306*. This configuration allows SSH connections from the front-end VM, and also allow an application on the front-end VM to communicate with a back-end MySQL database. All other traffic should be blocked between the front-end and back-end virtual machines.
 
-Use the [az network nsg rule create](/cli/azure/network/nsg/rule) command to create a rule for port 22. Notice that the `--source-address-prefix` argument specifies a value of *10.0.1.0/24*. This configuration ensures that only traffic from the front-end subnet is allowed through the NSG.
+Use the *az network nsg rule create* command to create a rule for port 22. Notice that the `--source-address-prefix` argument specifies a value of *10.0.1.0/24*. This configuration ensures that only traffic from the front-end subnet is allowed through the NSG.
 
 NSG rule for Bastion subnet 
 
@@ -453,7 +454,7 @@ az vm create \
   --generate-ssh-keys
 ```
 
-The back-end VM is only accessible on port *22* and port *3306* from the front-end subnet. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the [az network rule list](/cli/azure/network/nsg/rule) command. 
+The back-end VM is only accessible on port *22* and port *3306* from the front-end subnet. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the *az network rule list* command. 
 
 ```azurecli-interactive 
 az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myBackendNSG --output table
@@ -463,5 +464,6 @@ Connect to myBackendVM with your AD account through the Bastion Host we created 
 Get the Resource ID for the VM to which you want to connect. The Resource ID can be easily located in the Azure portal. Go to the Overview page for your VM and select the JSON View link to open the Resource JSON. Copy the Resource ID at the top of the page to your clipboard to use later when connecting to your VM.
 
 ```azurecli-interactive 
-az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAME --target-resource-id "<VMResourceId or VMSSInstanceResourceId>" --auth-type "AAD"
+VM_ID=(az vm show -n myBackendVM --resource-group $RESOURCE_GROUP_NAME -o tsv --query id)
+az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAME --target-resource-id $VM_ID --auth-type "AAD"
 ```
