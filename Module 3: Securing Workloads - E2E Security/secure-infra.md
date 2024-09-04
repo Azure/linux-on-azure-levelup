@@ -464,6 +464,7 @@ Connect to myBackendVM with your AD account through the Bastion Host we created 
 Get the Resource ID for the VM to which you want to connect. The Resource ID can be easily located in the Azure portal. Go to the Overview page for your VM and select the JSON View link to open the Resource JSON. Copy the Resource ID at the top of the page to your clipboard to use later when connecting to your VM.
 
 ```azurecli-interactive 
-VM_ID=(az vm show -n myBackendVM --resource-group $RESOURCE_GROUP_NAME -o tsv --query id)
+export VM_ID=$(az vm show -n myBackendVM --resource-group $RESOURCE_GROUP_NAME -o tsv --query id)
+
 az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAME --target-resource-id $VM_ID --auth-type "AAD"
 ```
