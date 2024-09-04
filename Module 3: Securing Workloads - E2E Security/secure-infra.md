@@ -459,6 +459,17 @@ The back-end VM is only accessible on port *22* and port *3306* from the front-e
 ```azurecli-interactive 
 az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myBackendNSG --output table
 ```
+### Enable Azure AD Login for Backend VM 
+
+```bash
+az vm extension set \
+    --publisher Microsoft.Azure.ActiveDirectory \
+    --name AADSSHLoginForLinux \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --vm-name myBackendVM \
+    --output tsv
+```
+
 Connect to myBackendVM with your AD account through the Bastion Host we created above .
 
 Get the Resource ID for the VM to which you want to connect. The Resource ID can be easily located in the Azure portal. Go to the Overview page for your VM and select the JSON View link to open the Resource JSON. Copy the Resource ID at the top of the page to your clipboard to use later when connecting to your VM.
