@@ -107,6 +107,7 @@ az network nat gateway create \
     --location $REGION \
     --output tsv
 ```
+
 ### Add Tag to NAT gateway resource
 
 ```bash
@@ -347,14 +348,13 @@ az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAM
 
 Create Bastion tunnel using AZ CLI
 
-```
+```bash
 az network bastion tunnel --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAME --target-resource-id $VM_RESOURCE_ID --auth-type "AAD" --username $USERNAME
-
 ```
 
 Use local SSH client to connect to VM
 
-```
+```bash
 ssh user@127.0.0.1
 
 ```
