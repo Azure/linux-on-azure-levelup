@@ -16,7 +16,7 @@ Built-in support for some distro options (e.g., SUSE & Red Hat, Ubuntu): <https:
   * Systemd
   * Kernel releases
   * CIFS
-  * Linux optimised hypervisor
+  * Linux optimized hypervisor
 * Can bring custom images to Azure
 * Huge number of distros available in Azure Portal/marketplace
 * Partnerships (useful for support interactions):
