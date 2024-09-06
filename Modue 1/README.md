@@ -1,4 +1,4 @@
-# Linux on Azure LevelUp FY25 Module 1 Redploy AND rEHOST
+# Linux on Azure LevelUp FY25 Module 1 Redploy and Rehost
 
 This module is focused two workflows:
 
