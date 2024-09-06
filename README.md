@@ -10,6 +10,5 @@ The completion of the modules will require
 
     2. Azure CLI installed. The Azure CLI version should be v2.63.0 or higher. You can see the version with " az version " command. Please upgrade your CLI version before you start the Labs. You can see how to upgrade CLI version here : https://learn.microsoft.com/en-us/cli/azure/update-azure-cli
 
-<!--heading -->
-<a id="item-one"></a>
+
 
