@@ -459,7 +459,7 @@ az vm create \
   --os-disk-size-gb 30 \
   --admin-username $VM_ADMIN_USER \
   --authentication-type ssh \
-  --generate-ssh-keys
+  --ssh-key-value "$HOME/id_ed25519_levelup_key.pem.pub" 
 ```
 
 The backend VM is only accessible on port *22* from bastion subnet and on port *3306* from the frontend subnet. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the *az network rule list* command.
