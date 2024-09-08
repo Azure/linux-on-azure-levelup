@@ -1,13 +1,13 @@
 
 # Lab 1: Create Linux VMs in a Secure Environment
 
-In this Lab we are going to deploy two virtual machines and configure Azure networking for these VMs.  Assume that the VMs are hosting a web application with a database backend, however an application is not deployed in the Lab. You learn how to:
+In this Lab we are going to deploy two virtual machines and configure Azure networking for these VMs.  Assume that the VMs are hosting a web application with a database backend, however an application is not deployed in the Lab. There are 6 Tasks in this Lab. You learn how to:
 
 > * Create a virtual network and subnet
 > * Create Bastion Host
 > * Create a public IP address
 > * Create a frontend(webapp) VM
-> * Enable AADSSH
+> * Enable AADSSH for VMs.
 > * Secure network traffic with NSGs
 > * Block default outound connection and use NAT Gateway for explicit outbound connections
 > * Create a backend(DB) VM
