@@ -7,7 +7,9 @@ In this Lab we are going to deploy two virtual machines and configure Azure netw
 > * Create Bastion Host
 > * Create a public IP address
 > * Create a frontend(webapp) VM
+> * Enable AADSSH
 > * Secure network traffic with NSGs
+> * Block default outound connection and use NAT Gateway for explicit outbound connections
 > * Create a backend(DB) VM
 
 ## VM networking overview
@@ -24,10 +26,12 @@ At the end of the Lab the following virtual network resources are created:
 * *myBackendSubnet* - The subnet associated with *myBackendNSG* and used by the backend resources.
 * *myBackendNic* - The network interface used by *myBackendVM* to communicate with *myFrontendVM*.
 * *myBackendVM* - The VM that uses 3306 to communicate with *myFrontendVM*.
+* *bastion-levelup-${SUFFIX}* - The bastion host that used for connecting to *myBackendVM* 
+* *nat-level-up-${SUFFIX}* - The nat gateway for outbound traffic communication in *myBackendSubnet*
 
 ## TASK 1 : Create a virtual network and subnets
 
-For this tutorial, a single virtual network is created with two subnets. A frontend subnet for hosting a web application, and a backend subnet for hosting a database server.
+For this tutorial, a single virtual network is created with three subnets. A frontend subnet for hosting a web application, and a backend subnet for hosting a database server and a AzureBastionSubnet for hosting bastion host. 
 
 Before you can create a virtual network, create a resource group with *az group create*. The following example creates a resource group named *rg-levelup-${SUFFIX}* in the ```swedencentral``` location.
 
@@ -50,13 +54,14 @@ az group create --name $RESOURCE_GROUP_NAME --location $REGION
 
 ### Step 2: Create virtual network and Frontend Subnet
 
-Use the *az network vnet create* command to create a virtual network. In this example the network is named *mvVNet-${SUFFIX}* and is given an address prefix of *10.0.0.0/16*. A subnet is also created with a name of *myFrontendSubnet* and a prefix of *10.0.1.0/24*. Later in this tutorial a frontend VM is connected to this subnet.  
+Use the *az network vnet create* command to create a virtual network. In this example the network is named *mvVNet-${SUFFIX}* and is given an address prefix of *10.0.0.0/16*. A subnet is also created with a name of *myFrontendSubnet* and a prefix of *10.0.1.0/24*. Later in this lab a frontend VM is connected to this subnet.  
 
-In this step we re going to create the VNET named *mvVNet-${SUFFIX}* and a subnet named *myFrontendSubnet* and a prefix of *10.0.1.0/24*. We'll put a frontend VM in the *myFrontendSubnet* later in this lab.  
+
 See the below important features that we used while creating the VNET:  
 
-* Outbound Internet connection is disabled with  *--default-outbound false* flag.  By default outbound internet connection is open for the VNETs. A breaking change will be happen to disable default outbound internet connection as of on xyz date.
-* VNET Encrytion is set with *--enable-encryption true* . This mean the VM traffic within the VNET will be encrypted. Virtual Network encryption is supported on general-purpose and memory optimized virtual machine instance sizes. The *--encryption-enforcement-policy* flag is for controlling if the VM without encryption is allowed in encrypted Virtual Network or not.
+* For *myBackendSubnet* the Outbound Internet connection is disabled with  *--default-outbound false* flag.  By default outbound internet connection is open for the VNETs. A breaking change will be happen to disable default outbound internet connection on Sep 30th 2025. You can find more information here : https://azure.microsoft.com/en-us/updates/default-outbound-access-for-vms-in-azure-will-be-retired-transition-to-a-new-method-of-internet-access/
+
+* VNET Encrytion is set with *--enable-encryption true* . This means the VM traffic within the VNET will be encrypted. Virtual Network encryption is supported on general-purpose and memory optimized virtual machine instance sizes. The *--encryption-enforcement-policy* flag is for controlling if the VM without encryption is allowed in encrypted Virtual Network or not.
 
 ```azurecli-interactive
 az network vnet create \
@@ -89,7 +94,7 @@ az network vnet subnet create \
   --address-prefix 10.0.2.0/24
 ```
 
-This will create a subnet for Azure Bastion.
+This will create a subnet for Azure Bastion. The subnet name had to be *AzureBastionSubnet* for bastion host.
 
 ```bash
 export BASTION_SUBNET_NAME="AzureBastionSubnet"
@@ -104,7 +109,7 @@ az network vnet subnet create \
     --output tsv
 ```
 
-At this point, a network has been created and segmented into three subnets, one for frontend services, one for backend services and the last one is for bastion host. In the next section, virtual machines are created and connected to these subnets.
+At this point, a network has been created and segmented into three subnets, one for frontend services, one for backend services and the last one is for bastion host. In the next section, virtual machines are created and connected to these subnets. We will not assign an publicIP for *myBackendVM* and we'll use bastion host for connecting *myBackendVM*
 
 ## TASK 2: Create and Configure Frontend VM   
 
@@ -123,7 +128,7 @@ Once the feature 'EncryptionAtHost' is registered, invoking 'az provider registe
 
 ### Step 2: Create cloud-init file
 
-We're going ti use the frontend VM at our next Lab. Installing some prerequisetes like firewall(ufw) , apparmor* etc.
+We're going to use the frontend VM at our next Lab. Installing some prerequisetes like firewall(ufw) , apparmor* etc.
 
 ```bash
 cat << EOF > cloud-init.txt
@@ -200,7 +205,7 @@ az vm create \
 
 A network security group can be created at the same time as a VM using the *az vm create* command. When doing so, the NSG is associated with the VMs network interface and an NSG rule is auto created to allow traffic on port *22* from any source. Earlier in this lab the frontend NSG was auto-created with the frontend VM. An NSG rule was also auto created for port 22.  
 
-In some cases, it may be helpful to pre-create an NSG, such as when default SSH rules should not be created, or when the NSG should be attached to a subnet.  
+In some cases, it may be helpful to pre-create an NSG, such as when default SSH rules should not be created, or when the NSG should be attached to a subnet. We would like prevent default ssh rule to our backend VM, so we'll create the NSG before hand. 
 
 Use the *az network nsg create* command to create a network security group.
 
@@ -249,9 +254,9 @@ az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myFron
 
 ### Step 3: Configure role assignments for the VM
 
-The following example uses az role assignment create to assign the Virtual Machine Administrator Login role to the VM for your current Azure user. You obtain the username of your current Azure account by using az account show, and you set the scope to the VM created in a previous step by using az vm show.
+The following example uses az role assignment create to assign the Virtual Machine Administrator Login role to the VM for your current Azure user. You obtain the username of your current Azure account by using az account show, and you set the scope to the VM created in a previous step by using az vm show. This role is needed for using AADSSH with VM. Y
 
-You can also assign the scope at a resource group or subscription level. Normal Azure RBAC inheritance permissions apply.
+You can also assign the scope at a resource group or subscription level.We'll use resource group for scope. 
 
 ```bash
 USERNAME=$(az account show --query user.name --output tsv)
@@ -269,7 +274,7 @@ az extension add --name ssh
 ```
 ### Step 5: Enable Azure AD Login for a Linux virtual machine in Azure
 
-The following code example deploys a Linux VM and then installs the extension to enable an Azure AD Login for a Linux VM. VM extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines.
+The following code example installs the extension to enable an Azure AD Login for a Linux VM. VM extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines.
 
 ```bash
 az vm extension set \
@@ -296,9 +301,9 @@ az ssh config --file ~/.ssh/config --name myFrontendVM --resource-group $RESOURC
 
 ### Step 8: Secure VM to VM traffic
 
-Network security group rules can also apply between VMs. For this example, the frontend VM needs to communicate with the backend VM on port *22* and *3306*. This configuration allows SSH connections from the frontend VM, and also allow an application on the frontend VM to communicate with a backend MySQL database. All other traffic should be blocked between the frontend and backend virtual machines.
+Network security group rules can also apply between VMs. For this example, the frontend VM needs to communicate with the backend VM on port *3306* and Bastion host needs to reach out to backend VM on port *22*. This configuration allows SSH connections from the Bastion Host, and also allow an application on the frontend VM to communicate with a backend MySQL database. All other traffic should be blocked between the frontend and backend virtual machines.
 
-Use the *az network nsg rule create* command to create a rule for port 22. Notice that the `--source-address-prefix` argument specifies a value of *10.0.1.0/24*. This configuration ensures that only traffic from the frontend subnet is allowed through the NSG.
+Use the *az network nsg rule create* command to create a rule for port 22. Notice that the `--source-address-prefix` argument specifies a value of *10.0.1.0/24* for forntend VM subnet and *10.0.3.0/26 * for Bastion subnet. This configuration ensures that only traffic from the frontend subnet is allowed for port *3306* and bastion subnet for port *22* through the NSG.
 
 NSG rule for Bastion subnet:  
 
@@ -457,7 +462,7 @@ az vm create \
   --generate-ssh-keys
 ```
 
-The backend VM is only accessible on port *22* and port *3306* from the frontend subnet. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the *az network rule list* command.
+The backend VM is only accessible on port *22* from bastion subnet and on port *3306* from the frontend subnet. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the *az network rule list* command.
 
 ```azurecli-interactive
 az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myBackendNSG --output table
@@ -476,13 +481,14 @@ az vm extension set \
 
 Connect to myBackendVM with your AD account through the Bastion Host we created above .
 
-Get the Resource ID for the VM to which you want to connect. The Resource ID can be easily located in the Azure portal. Go to the Overview page for your VM and select the JSON View link to open the Resource JSON. Copy the Resource ID at the top of the page to your clipboard to use later when connecting to your VM.
+You need to get the Resource ID for the VM to which you want to connect. The Resource ID can be easily located in the Azure portal or with the *az vm show* command as we use below. 
 
 ```azurecli-interactive
 export VM_ID=$(az vm show -n myBackendVM --resource-group $RESOURCE_GROUP_NAME -o tsv --query id)
 
 az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAME --target-resource-id $VM_ID --auth-type "AAD"
 ```
+
 
 ## TASK 6:  Enable and configure Just-in-Time (JIT) access for frontend VM SSH access
 
