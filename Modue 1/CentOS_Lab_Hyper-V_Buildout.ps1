@@ -130,8 +130,7 @@ $bitsJobs = @(
     
 @{ JobName = "Job1"; SourceUrl = "https://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-Everything-1908.iso"; DestinationPath = "C:\\LinuxLab\\CentOS-7-EOL.iso" },
 @{ JobName = "Job2"; SourceUrl = "https://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso"; DestinationPath = "C:\\LinuxLab\\CentOS-7-Minimal.iso" },
-@{ JobName = "Job3"; SourceUrl = "https://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso"; DestinationPath = "C:\\LinuxLab\\CentOS-7-NetInstall.iso" },
-@{ JobName = "Job4"; SourceUrl = "https://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-LiveGNOME-1908.iso"; DestinationPath = "C:\\LinuxLab\\CentOS-7-LiveGNOME.iso" }
+@{ JobName = "Job3"; SourceUrl = "https://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-LiveGNOME-1908.iso"; DestinationPath = "C:\\LinuxLab\\CentOS-7-LiveGNOME.iso" }
     
 
     
@@ -206,13 +205,35 @@ Start-VM -Name "LinuxLabVM-CentOS-7-EOL-2-RHEL"
 Write-Output "VM LinuxLabVM-CentOS-7-EOL-2-RHEL created and started."
 $Comment = "VM LinuxLabVM-CentOS-7-EOL-2-RHEL created and started."
 Write-Log -EventTimeStamp $logFilePath -Comment $Comment
+
+Write-Output "Creating VM: LinuxLabVM-CentOS-7-PostGreSQL"
+New-VM -Name "LinuxLabVM-CentOS-7-PostGreSQL" -MemoryStartupBytes 1GB -Generation 1 -SwitchName "Default Switch" -NewVHDPath "C:\LinuxLab\VMFiles\LinuxLabVM-CentOS-7-PostGreSQL.vhdx" -NewVHDSizeBytes 60GB
+Set-VMProcessor -VMName "LinuxLabVM-CentOS-7-PostGreSQL" -Count 2
+Add-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-PostGreSQL" -Path "C:\\LinuxLab\\CentOS-7-EOL.iso"
+Set-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-PostGreSQL" -ControllerNumber 0 -ControllerLocation 1
+Start-VM -Name "LinuxLabVM-CentOS-7-PostGreSQL"
+
+Write-Output "VM LinuxLabVM-CentOS-7-Apache created and started."
+$Comment = "LinuxLabVM-CentOS-7-Apache created and started."
+Write-Log -EventTimeStamp $logFilePath -Comment $Comment
+
+Write-Output "Creating VM: LinuxLabVM-CentOS-7-Apache"
+New-VM -Name "LinuxLabVM-CentOS-7-Apache" -MemoryStartupBytes 1GB -Generation 1 -SwitchName "Default Switch" -NewVHDPath "C:\LinuxLab\VMFiles\LinuxLabVM-CentOS-7-Apache.vhdx" -NewVHDSizeBytes 60GB
+Set-VMProcessor -VMName "LinuxLabVM-CentOS-7-Apache" -Count 2
+Add-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-Apache" -Path "C:\\LinuxLab\\CentOS-7-EOL.iso"
+Set-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-Apache" -ControllerNumber 0 -ControllerLocation 1
+Start-VM -Name "LinuxLabVM-CentOS-7-Apache"
+
+Write-Output "VM LinuxLabVM-CentOS-7-Apache created and started."
+$Comment = "LinuxLabVM-CentOS-7-Apache created and started."
+Write-Log -EventTimeStamp $logFilePath -Comment $Comment
+
 # VM creation complete
 Write-Output "All BITS jobs completed, ISOs validated, and VMs created."
 $Comment = "All BITS jobs completed, ISOs validated, and VMs created."
 Write-Log -EventTimeStamp $logFilePath -Comment $Comment
 
 #Post installation setup of VM's
-
 
 
 # Script completion message

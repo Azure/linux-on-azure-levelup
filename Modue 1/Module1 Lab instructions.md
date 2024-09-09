@@ -11,6 +11,9 @@ The CentOS_Lab_Hyper-V_Buildout.ps1 file is used to download the CentOS iso's an
 
 **NOTE** The Powershell script uses 1GB of RAM per VM it builds. This can be adjusted manually within the scipt prior to running if your system does not have enough of RAM to support all the VM's.
 
+1. Download the CentOS_Lab_Hyper-V_Buildout.ps1 and run with elevated privelages from the Powershell command. Alternalety you can copy the script content into Windows PowerShell ISE and execute the scipt.
+
+2. 
 ## Lab Access Web Server
 
 NOTE: Accept the fingerprint when connecting by typing yes and pressing enter. You may see the message "Failed to add the host to the list of known hosts". This message can be ignored, proceed to enter the password below to connect to the server as the user devops.
