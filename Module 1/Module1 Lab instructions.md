@@ -17,6 +17,10 @@ The CentOS_Lab_Hyper-V_Buildout.ps1 file is used to download the CentOS iso's an
 
 ![Linux Lab centOS EOL](images/Hyper-V-Manager-CentOS-EOL-Lab.png "Linux Lab CentOS EOL")
 
+## Install CentOS on Hyper-V VM's via the GUI
+
+There are six VM's deployed in this lab, three of them will be used for Rehost, Redploy and Modernize sections to follow. The other three are deployed so that at any time you can explore using the different versions of distro's which include Minimal, Everything and Live ISO's to deploy and or interact with the OS.
+
 ## Lab Access Web Server
 
 NOTE: Accept the fingerprint when connecting by typing yes and pressing enter. You may see the message "Failed to add the host to the list of known hosts". This message can be ignored, proceed to enter the password below to connect to the server as the user devops.

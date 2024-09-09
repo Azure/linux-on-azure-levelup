@@ -128,7 +128,7 @@ function Create-VM {
 # BITS job details
 $bitsJobs = @(
     
-@{ JobName = "Job1"; SourceUrl = "https://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-Everything-1908.iso"; DestinationPath = "C:\\LinuxLab\\CentOS-7-EOL.iso" },
+@{ JobName = "Job1"; SourceUrl = "https://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-Everything-1908.iso"; DestinationPath = "C:\\LinuxLab\\CentOS-7-Everything.iso" },
 @{ JobName = "Job2"; SourceUrl = "https://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso"; DestinationPath = "C:\\LinuxLab\\CentOS-7-Minimal.iso" },
 @{ JobName = "Job3"; SourceUrl = "https://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-LiveGNOME-1908.iso"; DestinationPath = "C:\\LinuxLab\\CentOS-7-LiveGNOME.iso" }
     
@@ -198,7 +198,7 @@ foreach ($bitsJob in $bitsJobs) {
 Write-Output "Creating VM: LinuxLabVM-CentOS-7-EOL-2-RHEL"
 New-VM -Name "LinuxLabVM-CentOS-7-EOL-2-RHEL" -MemoryStartupBytes 1GB -Generation 1 -SwitchName "Default Switch" -NewVHDPath "C:\LinuxLab\VMFiles\LinuxLabVM-CentOS-7-EOL-2-RHEL.vhdx" -NewVHDSizeBytes 60GB
 Set-VMProcessor -VMName "LinuxLabVM-CentOS-7-EOL-2-RHEL" -Count 2
-Add-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-EOL-2-RHEL" -Path "C:\\LinuxLab\\CentOS-7-EOL.iso"
+Add-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-EOL-2-RHEL" -Path "C:\\LinuxLab\\CentOS-7-Everything.iso"
 Set-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-EOL-2-RHEL" -ControllerNumber 0 -ControllerLocation 1
 Start-VM -Name "LinuxLabVM-CentOS-7-EOL-2-RHEL"
 
@@ -209,7 +209,7 @@ Write-Log -EventTimeStamp $logFilePath -Comment $Comment
 Write-Output "Creating VM: LinuxLabVM-CentOS-7-PostGreSQL"
 New-VM -Name "LinuxLabVM-CentOS-7-PostGreSQL" -MemoryStartupBytes 1GB -Generation 1 -SwitchName "Default Switch" -NewVHDPath "C:\LinuxLab\VMFiles\LinuxLabVM-CentOS-7-PostGreSQL.vhdx" -NewVHDSizeBytes 60GB
 Set-VMProcessor -VMName "LinuxLabVM-CentOS-7-PostGreSQL" -Count 2
-Add-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-PostGreSQL" -Path "C:\\LinuxLab\\CentOS-7-EOL.iso"
+Add-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-PostGreSQL" -Path "C:\\LinuxLab\\CentOS-7-Everything.iso"
 Set-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-PostGreSQL" -ControllerNumber 0 -ControllerLocation 1
 Start-VM -Name "LinuxLabVM-CentOS-7-PostGreSQL"
 
@@ -220,7 +220,7 @@ Write-Log -EventTimeStamp $logFilePath -Comment $Comment
 Write-Output "Creating VM: LinuxLabVM-CentOS-7-Apache"
 New-VM -Name "LinuxLabVM-CentOS-7-Apache" -MemoryStartupBytes 1GB -Generation 1 -SwitchName "Default Switch" -NewVHDPath "C:\LinuxLab\VMFiles\LinuxLabVM-CentOS-7-Apache.vhdx" -NewVHDSizeBytes 60GB
 Set-VMProcessor -VMName "LinuxLabVM-CentOS-7-Apache" -Count 2
-Add-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-Apache" -Path "C:\\LinuxLab\\CentOS-7-EOL.iso"
+Add-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-Apache" -Path "C:\\LinuxLab\\CentOS-7-Everything.iso"
 Set-VMDvdDrive -VMName "LinuxLabVM-CentOS-7-Apache" -ControllerNumber 0 -ControllerLocation 1
 Start-VM -Name "LinuxLabVM-CentOS-7-Apache"
 
