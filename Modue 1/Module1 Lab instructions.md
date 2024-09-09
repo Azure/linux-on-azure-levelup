@@ -15,7 +15,7 @@ The CentOS_Lab_Hyper-V_Buildout.ps1 file is used to download the CentOS iso's an
 
 2. Once the Script has completed, you should have six new VM's as seen in the picture below:
 
-![Linux Lab centOS EOL](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Linux Lab CentOS EOL")
+![Linux Lab centOS EOL](images/Hyper-V-Manager-CentOS-EOL-Lab.png "Linux Lab CentOS EOL")
 
 ## Lab Access Web Server
 
