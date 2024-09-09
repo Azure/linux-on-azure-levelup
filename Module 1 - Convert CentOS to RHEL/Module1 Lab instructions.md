@@ -3,7 +3,7 @@
 Overview
 
 In this workshop you will convert a Centos 7 system into a Red Hat Enterprise Linux 7 system.
-You will also convert CentOS 7 systems to Alma Linux, CentOS Stream and Rocky distros.
+You can also convert CentOS 7 systems to Alma Linux or Rocky distros, you can find the links to the instructions below in the Notes from the Field.
 
 The CentOS_Lab_Hyper-V_Buildout.ps1 file is used to download the CentOS iso's and build the VM's that then can be configured  for the addtional steps in both Module 1 and Module 2.
 
@@ -231,3 +231,8 @@ Solution 1: `echo "export CONVERT2RHEL_ALLOW_UNAVAILABLE_KMODS=1" >> ~/.bashrc; 
 Solution 2: `echo "export CONVERT2RHEL_TAINTED_KERNEL_MODULE_CHECK_SKIP=1" >> ~/.bashrc; source ~/.bashrc`
 Solution 3: `echo "export CONVERT2RHEL_SKIP_KERNEL_CURRENCY_CHECK=1" >> ~/.bashrc; source ~/.bashrc`
 Solution 4: `echo "export CONVERT2RHEL_OUTDATED_PACKAGE_CHECK_SKIP=1" >> ~/.bashrc; source ~/.bashrc`
+
+### Other supported distros to convert to from CentOS
+
+https://wiki.almalinux.org/elevate/ELevating-CentOS7-to-AlmaLinux-9.html
+https://docs.rockylinux.org/guides/migrate2rocky/
