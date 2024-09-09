@@ -29,6 +29,52 @@ The three VM's we will use are:
 + LinuxLabVM-CentOS-7-PostGreSQL
 + LinuxLabVM-CentOS-7-Apache
 
+Follow the steps below for all three VM's listed above (EOL-2-RHEL, PostGreSQL, Apache)
+1. Configure Language preference for OS install
+
+![Language Preference](images/PostgreSQL_1.png.png "Language Preference")
+
+2. Configure Installation Destination
+
+![Destination](images/PostgreSQL_2.png.png "Destination")
+
+3. Choose 60 GiB Virtaul Disk to install to
+
+![Install Disk](images/PostgreSQL_3.png.png "Install Disk")
+
+4. Configure Network (Toggle Network interface to "ON")
+
+![Network](images/PostgreSQL_4.png.png "Network")
+
+5. Begin Installation
+
+![Begin Install](images/PostgreSQL_5.png.png "Begin Install")
+
+6. Set Root password to something you can remember for the lab
+
+![Root Password](images/PostgreSQL_6.png.png "Root Password")
+
+![Root Password](images/PostgreSQL_7.png.png "Root Password")
+
+7. Let installation continue to complete (about five minutes)
+
+![Root Password](images/PostgreSQL_8.png.png "Root Password")
+
+8. Reboot system
+
+![Reboot system](images/PostgreSQL_9.png.png "Reboot system")
+
+9. Log into VM from the console
+
+![First time login](images/PostgreSQL_10.png.png "First time login")
+
+
+
+
+
+
+
+## Configure VM's via putty
 
 ## Lab Access Web Server
 
