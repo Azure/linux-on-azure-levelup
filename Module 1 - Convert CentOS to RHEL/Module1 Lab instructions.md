@@ -234,5 +234,5 @@ Solution 4: `echo "export CONVERT2RHEL_OUTDATED_PACKAGE_CHECK_SKIP=1" >> ~/.bash
 
 ### Other supported distros to convert to from CentOS
 
-https://wiki.almalinux.org/elevate/ELevating-CentOS7-to-AlmaLinux-9.html
-https://docs.rockylinux.org/guides/migrate2rocky/
++ AlmaLinux https://wiki.almalinux.org/elevate/ELevating-CentOS7-to-AlmaLinux-9.html
++ Rocky Linux https://docs.rockylinux.org/guides/migrate2rocky/
