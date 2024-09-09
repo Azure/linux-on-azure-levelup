@@ -116,7 +116,9 @@ Now we'll actually perform the Centos to RHEL conversion. Keep in mind to use el
 
 1. Via putty log into the VM as the root user.
 
-2.Switch to the root directory
+2. Switch to the root directory
+
+At the command type "cd /"
 
 ## Enabling the Convert2RHEL Repository on LinuxLabVM-CentOS-7-EOL-2-RHEL VM
 
@@ -124,16 +126,17 @@ The Convert2RHEL RPM is an offical Red Hat package.
 Therefore it is readily availble from the Red Hat software repository (CDN).
 As your CentOS server is not subscribed to the Red Hat CDN, you will need to enable the Convert2RHEL repository.
 
-1. Get the GPG signing key
+1. Get the GPG signing key by 
 
-curl -o /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release <https://www.redhat.com/security/data/fd431d51.txt>
+At the command type "curl -o /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release <https://www.redhat.com/security/data/fd431d51.txt>"
 
 2. Download the SSL certificate
 
-curl --create-dirs -o /etc/rhsm/ca/redhat-uep.pem <https://ftp.redhat.com/redhat/convert2rhel/redhat-uep.pem>
+At the command type "curl --create-dirs -o /etc/rhsm/ca/redhat-uep.pem <https://ftp.redhat.com/redhat/convert2rhel/redhat-uep.pem>"
 
 3. Download the convert2rhel repository file
-curl -o /etc/yum.repos.d/convert2rhel.repo <https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo>
+
+At the command type "curl -o /etc/yum.repos.d/convert2rhel.repo <https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo>"
 
 ## Installing the Convert2RHEL Utility
 
@@ -141,15 +144,15 @@ Now that the requisite repository is enabled on your CentOS Linux system, it is 
 
 1. Before you begin the installation process, verify that you are running CentOS Linux and on the latest minor version.
 
-cat /etc/centos-release
+At the command type "cat /etc/centos-release"
 
 2. Verify that the Convert2RHEL repo is enabled.
 
-yum repolist
+At the command type "yum repolist"
 
 3. Install the convert2rhel utility.
 
-yum install -y convert2rhel
+At the command type "yum install -y convert2rhel"
 
 ## Run the Convert2RHEL Utility
 
@@ -162,27 +165,27 @@ The below varaibles are not recommnded for converting production systems. The re
 
 1. Allow unknown Modules varaible
 
-echo "export CONVERT2RHEL_ALLOW_UNAVAILABLE_KMODS=1" >> ~/.bashrc
+At the command type "echo "export CONVERT2RHEL_ALLOW_UNAVAILABLE_KMODS=1" >> ~/.bashrc"
 
 2. Skip Tainted Kernel Modules varaible
 
-echo "export CONVERT2RHEL_TAINTED_KERNEL_MODULE_CHECK_SKIP=1" >> ~/.bashrc
+At the command type "echo "export CONVERT2RHEL_TAINTED_KERNEL_MODULE_CHECK_SKIP=1" >> ~/.bashrc"
 
 3. Skip Kernel Currencey Check varaible
 
-echo "export CONVERT2RHEL_SKIP_KERNEL_CURRENCY_CHECK=1" >> ~/.bashrc
+At the command type "echo "export CONVERT2RHEL_SKIP_KERNEL_CURRENCY_CHECK=1" >> ~/.bashrc"
 
 4. Skip Outdated Package Check varaible
 
-echo "export CONVERT2RHEL_OUTDATED_PACKAGE_CHECK_SKIP=1" >> ~/.bashrc
+At the command type "echo "export CONVERT2RHEL_OUTDATED_PACKAGE_CHECK_SKIP=1" >> ~/.bashrc"
 
 5. Now Load the variable(s) into the active shell
 
-source ~/.bashrc
+At the command type "source ~/.bashrc"
 
 6. In order to automate this process, you need to use activation key in the conversion command.
 
-convert2rhel --org 12451665 --activationkey convert2rhel -y
+At the command type "convert2rhel --org 12451665 --activationkey convert2rhel -y"
 
 **NOTE** 
 
@@ -193,20 +196,21 @@ Adding a `-y` as an argument will automate the input.
 Now that the conversion has been deployed successfully, you will need to reboot the system in order to put the changes into effect.
 Reboot is required because the system is now running a Red Hat Enterprise Linux Kernel `kernel-3.10.0-1160.118.1.el7.x86_64`
 
-reboot
+7. Reboot the system load the new kernel.
 
-## Verify the system is running on Red Hat Enterprise Linux.
+At the command type "reboot"
 
-cat /etc/redhat-release
+8. Verify the system is running on Red Hat Enterprise Linux.
 
-Verify that the necessary Red Hat repositories are enabled.
-Also, note that none of the old CentOS repos are available.
+At the command type "cat /etc/redhat-release"
 
-yum repolist
+9. Verify that the necessary Red Hat repositories are enabled. Also, note that none of the old CentOS repos are available.
 
-Now you can review the logs from the conversion itself.
+At the command type "yum repolist"
 
-less /var/log/convert2rhel/convert2rhel.log
+10. Now you can review the logs from the conversion itself.
+
+At the command type "less /var/log/convert2rhel/convert2rhel.log"
 
 Use the down arrow key or page down key to view more of the log.
 To close the log, simply press the "q" key for quit.
