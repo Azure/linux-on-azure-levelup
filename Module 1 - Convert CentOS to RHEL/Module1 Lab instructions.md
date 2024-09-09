@@ -241,6 +241,10 @@ Solution 4: `echo "export CONVERT2RHEL_OUTDATED_PACKAGE_CHECK_SKIP=1" >> ~/.bash
 
 Current supported method for migrating a Hyper-V VM can be found here:
 
-+ Hyper-V Host requirements https://learn.microsoft.com/en-us/azure/migrate/migrate-support-matrix-hyper-v-migration#hyper-v-host-requirements
-+ Migrate Hyper-V VM's https://learn.microsoft.com/en-us/azure/migrate/tutorial-migrate-hyper-v?tabs=UI
++ Hyper-V Host requirements 
+
+https://learn.microsoft.com/en-us/azure/migrate/migrate-support-matrix-hyper-v-migration#hyper-v-host-requirements
++ Migrate Hyper-V VM's
+
+https://learn.microsoft.com/en-us/azure/migrate/tutorial-migrate-hyper-v?tabs=UI
 
