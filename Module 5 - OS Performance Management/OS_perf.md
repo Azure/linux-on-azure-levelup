@@ -1,13 +1,13 @@
-# This module will describe how Obtaining Performance metrics from a Linux system and test network performance using iperf3
+# This module will describe how obtaining performance metrics from a Linux system and test network performance using iperf3
 
 It will cover the following LAB topics:
 
-1. Obtaining Performance metrics from a Linux system
+1. Obtaining performance metrics from a Linux system
 1. Test network performance using iperf3
 
 All of the commands below are meant to be run on a Ubuntu 24.04 LTS machine previously installed in the Azure-Infra Lab, using sudo or root privileges. The below commands have been tested on WSL2 installation and the latest azure-cli version.
 
-## LAB 1: Obtaining Performance metrics from a Linux system
+## LAB 1: Obtaining performance metrics from a Linux system
 
 **Intro:**
 There are several commands that can be used to obtain performance counters on Linux. Commands such as vmstat and uptime, provide general system metrics such as CPU usage, System Memory, and System load. Most of the commands are already installed by default with others being readily available in default repositories. The commands can be separated into:
@@ -15,8 +15,6 @@ There are several commands that can be used to obtain performance counters on Li
 - CPU
 - Memory
 - Disk I/O
-- Processes
-- Network
 
 **TASK:**
 
@@ -565,10 +563,10 @@ az network vnet peering create \
 export IPERF_SERVER_RESOURCE_GROUP_NAME="rg-iperf3-server-<SUFFIX>" #replace <SUFFIX> with the actual value
 export IPERF_SERVER_NAME="vm-iperf3-server-<SUFFIX>" #replace <SUFFIX> with the actual value
 
-export IPERF_SEVER_VM_ID="$(az vm show -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" -n "$IPERF_SERVER_NAME" --query id -o tsv)"
+export IPERF_SERVER_VM_ID="$(az vm show -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" -n "$IPERF_SERVER_NAME" --query id -o tsv)"
 
 az network bastion tunnel -n $BASTION_NAME -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" \
-   --target-resource-id $IPERF_SEVER_VM_ID --resource-port 22 --port 2022
+   --target-resource-id $IPERF_SERVER_VM_ID --resource-port 22 --port 2022
 ```
 
 ```bash
