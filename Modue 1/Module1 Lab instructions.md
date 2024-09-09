@@ -9,11 +9,14 @@ The CentOS_Lab_Hyper-V_Buildout.ps1 file is used to download the CentOS iso's an
 
 ## Run Powershell script to build out a local Hyper-V lab on a Windows 11 client.
 
-**NOTE** The Powershell script uses 1GB of RAM per VM it builds. This can be adjusted manually within the scipt prior to running if your system does not have enough of RAM to support all the VM's.
+**NOTE** The Powershell script uses 1GB of RAM per VM it builds. This can be adjusted manually within the scipt prior to running if your system does not have enough of RAM to support all the VM's. You will need at least 10GB of free RAM.
 
 1. Download the CentOS_Lab_Hyper-V_Buildout.ps1 and run with elevated privelages from the Powershell command. Alternalety you can copy the script content into Windows PowerShell ISE and execute the scipt.
 
-2. 
+2. Once the Script has completed, you should have six new VM's as seen in the picture below:
+
+![Linux Lab centOS EOL](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Linux Lab CentOS EOL")
+
 ## Lab Access Web Server
 
 NOTE: Accept the fingerprint when connecting by typing yes and pressing enter. You may see the message "Failed to add the host to the list of known hosts". This message can be ignored, proceed to enter the password below to connect to the server as the user devops.
