@@ -106,7 +106,7 @@ Follow the steps below for all three VM's listed above (EOL-2-RHEL, PostGreSQL, 
 
 19. To update the system type the follwoing at the command line "sudo yum update -y"
 
-![New repo file](images/PostgreSQL_21.png "New repo file" width=50% height=50%)
+![New repo file](images/PostgreSQL_21.png "New repo file")
 
 ## Configure VM's via putty
 
