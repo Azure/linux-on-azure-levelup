@@ -324,7 +324,7 @@ ssh-keygen -m PEM -t ed25519 -f $HOME/id_ed25519_levelup_key.pem -C "LevelUp Lin
 ```bash
 export NSG_NAME="NSG-${SUFFIX}"
 export NSG_RULE_NAME="Allow-Access-${SUFFIX}"
-export VM_NIC_NAME="VMNic-${SUFFIX}"
+export VM_NIC_SERVER_NAME="VMNic-${SUFFIX}"
 
 az network nsg create \
    --name $NSG_NAME \
@@ -357,7 +357,7 @@ az network nsg rule create \
 ```bash
 az network nic create \
    --resource-group $IPERF_SERVER_RESOURCE_GROUP_NAME \
-   --name $VM_NIC_NAME \
+   --name $VM_NIC_SERVER_NAME \
    --location $REGION \
    --accelerated-networking true \
    --ip-forwarding false \
@@ -382,7 +382,7 @@ az vm create \
    --location $REGION \
    --size $VM_SIZE \
    --image $VM_IMAGE \
-   --nics $VM_NIC_NAME \
+   --nics $VM_NIC_SERVER_NAME \
    --nic-delete-option Delete \
    --storage-sku os=Premium_LRS \
    --os-disk-caching ReadWrite \
@@ -445,7 +445,7 @@ az network vnet subnet create \
 ```bash
 export NSG_NAME="NSG-${SUFFIX}"
 export NSG_RULE_NAME="Allow-Access-${SUFFIX}"
-export VM_NIC_NAME="VMNic-${SUFFIX}"
+export VM_NIC_CLIENT_NAME="VMNic-${SUFFIX}"
 
 az network nsg create \
    --name $NSG_NAME \
@@ -478,7 +478,7 @@ az network nsg rule create \
 ```bash
 az network nic create \
    --resource-group $IPERF_CLIENT_RESOURCE_GROUP_NAME \
-   --name $VM_NIC_NAME \
+   --name $VM_NIC_CLIENT_NAME \
    --location $IPERF_CLIENT_REGION \
    --accelerated-networking true \
    --ip-forwarding false \
@@ -503,7 +503,7 @@ az vm create \
    --location $IPERF_CLIENT_REGION \
    --size $VM_SIZE \
    --image $VM_IMAGE \
-   --nics $VM_NIC_NAME \
+   --nics $VM_NIC_CLIENT_NAME \
    --nic-delete-option Delete \
    --storage-sku os=Premium_LRS \
    --os-disk-caching ReadWrite \
@@ -558,8 +558,14 @@ az network vnet peering create \
 
 1. SSH into the iperf3-server-vm via the Azure Bastion Host
 
+> [!CAUTION]
+> Run the following commands in a separate terminal window to establish an SSH tunnel to the Azure VM. For those running in Azure Shell please use any terminal mulitplexor like tmux or screen to run the following commands.
+
 ```bash
-export IPERF_SEVER_VM_ID="$(az vm show -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" -n "$IPERF_SEVER_VM_NAME" --query id -o tsv)"
+export IPERF_SERVER_RESOURCE_GROUP_NAME="rg-iperf3-server-<SUFFIX>" #replace <SUFFIX> with the actual value
+export IPERF_SERVER_NAME="vm-iperf3-server-<SUFFIX>" #replace <SUFFIX> with the actual value
+
+export IPERF_SEVER_VM_ID="$(az vm show -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" -n "$IPERF_SERVER_NAME" --query id -o tsv)"
 
 az network bastion tunnel -n $BASTION_NAME -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" \
    --target-resource-id $IPERF_SEVER_VM_ID --resource-port 22 --port 2022
@@ -575,59 +581,71 @@ Start the iperf3 server on the iperf3-server-vm.
 iperf3 --server --port 9000 --format m
 ```
 
-2. SSH into the iperf3-client-vm via the Azure Bastion Host
+> [!TIP]
+> An alternative way of running the iperf3 server is to run it in the background using the nohup command via the Azure CLI run-command extension.
+
+   ```bash
+   az vm run-command invoke -g $IPERF_SERVER_RESOURCE_GROUP_NAME -n $IPERF_SERVER_VM_NAME --command-id RunShellScript --scripts "nohup iperf3 --server --port 9000 --format m > /var/log/iperf3.log 2>&1 &"
+   ```
+
+2. Start the iperf3 client on the iperf3-client-vm.
 
 ```bash
-export IPERF_CLIENT_VM_ID="$(az vm show -g "$IPERF_CLIENT_RESOURCE_GROUP_NAME" -n "$IPERF_CLIENT_VM_NAME" --query id -o tsv)"
+export IPERF_SERVER_VM_IP=$(az network nic show -g $IPERF_SERVER_RESOURCE_GROUP_NAME -n $VM_NIC_SERVER_NAME --query "ipConfigurations[0].privateIPAddress" -o tsv)
 
-az network bastion tunnel -n $BASTION_NAME -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" \
-   --target-resource-id $IPERF_CLIENT_VM_ID --resource-port 22 --port 2023
+az vm run-command invoke -g $IPERF_CLIENT_RESOURCE_GROUP_NAME -n $IPERF_CLIENT_VM_NAME --command-id RunShellScript --scripts "nohup iperf3 --client $IPERF_SERVER_VM_IP --port 9000 --format m --time 60 --parallel 1 --omit 1 > /var/log/iperf3-client.log 2>&1 &" 
 ```
 
-```bash
-ssh azureuser@localhost -p 2023 -i $HOME/id_ed25519_levelup_key.pem
-```
-
-3. Start the iperf3 client on the iperf3-client-vm.
-
-```bash
-export IPERF_SERVER_VM_IP=$(az vm show -g $IPERF_CLIENT_RESOURCE_GROUP_NAME -n $IPERF_SERVER_VM_NAME --query privateIps -o tsv)
-
-iperf3 --client $IPERF_SERVER_VM_IP --port 9000 --format m --time 60 --parallel 1 --omit 1
-```
+> [!IMPORTANT]
+> As we can observer with the default settings the network performance is not optimal and we are not close to the advised line speed of the Azure VMs.
 
 ```text
-Connecting to host
-[  4] local
-[  4] remote
-[  4]  0.0- 1.0 sec  1.10 GBytes  9.45 Gbits/sec
-[  4]  1.0- 2.0 sec  1.10 GBytes  9.45 Gbits/sec
-[  4]  2.0- 3.0 sec  1.10 GBytes  9.45 Gbits/sec
-[  4]  3.0- 4.0 sec  1.10 GBytes  9.45 Gbits/sec
+Connecting to host 10.230.0.4, port 9000
+[ 5] local 10.220.0.4 port 34018 connected to 10.230.0.4 port 9000
+[ ID] Interval Transfer Bitrate Retr Cwnd
+[ 5] 0.00-1.00 sec 9.38 MBytes 78.6 Mbits/sec 0 5.75 MBytes (omitted)
+[ 5] 0.00-1.00 sec 35.5 MBytes 297 Mbits/sec 0 8.01 MBytes
+[ 5] 1.00-2.00 sec 35.6 MBytes 299 Mbits/sec 0 8.01 MBytes
+[ 5] 2.00-3.00 sec 39.4 MBytes 330 Mbits/sec 0 8.01 MBytes
+[ 5] 3.00-4.00 sec 35.5 MBytes 298 Mbits/sec 0 8.01 MBytes
+[ 5] 4.00-5.00 sec 35.5 MBytes 298 Mbits/sec 0 8.01 MBytes
+[ 5] 5.00-6.00 sec 32.5 MBytes 273 Mbits/sec 15 5.62 MBytes
+[ 5] 6.00-7.00 sec 34.6 MBytes 290 Mbits/sec 0 5.62 MBytes
+[ 5] 7.00-8.00 sec 38.2 MBytes 321 Mbits/sec 0 5.62 MBytes
+[ 5] 8.00-9.00 sec 33.2 MBytes 279 Mbits/sec 8 3.95 MBytes
 ```
 
 ### Step 4: Tuning the sysctl parameters
 
+By increasing the kernel buffers and changing the congestion control algorithm to BBR we can improve the network performance.
+
 Modify the sysctl parameters on **BOTH** Azure VMs to improve network performance.
 
 ```bash
-cat << EOF > /etc/sysctl.d/99-azure-network-buffers.conf
-net.core.rmem_max = 2147483647
-net.core.wmem_max = 2147483647
-net.ipv4.tcp_rmem = 4096 67108864 1073741824
-net.ipv4.tcp_wmem = 4096 67108864 1073741824
-EOF
+sudo cat << EOF > /etc/sysctl.d/99-azure-network-buffers.conf  
+net.core.rmem_max = 2147483647  
+net.core.wmem_max = 2147483647  
+net.ipv4.tcp_rmem = 4096 67108864 1073741824  
+net.ipv4.tcp_wmem = 4096 67108864 1073741824  
+EOF 
 ```
 
-Apply the changes to the sysctl parameters.
+Apply the changes to the sysctl parameters on **BOTH** Azure VMs.
 
 ```bash
-sysctl -p /etc/sysctl.d/99-azure-network-buffers.conf
+sudo sysctl -p /etc/sysctl.d/99-azure-network-buffers.conf
 ```
 
 ### Step 5: Repeat the iperf3 test
 
-Repeat the iperf3 test to measure the network performance after tuning the sysctl parameters.
+> [!TIP]
+> If not already loaded please use the modprobe command to enable the TCP BBR congestion control algorithm.
+
+On the client side Azure VM please repeat the iperf3 test to measure the network performance after tuning the sysctl parameters.
+
+```bash
+sudo modprobe tcp_bbr
+```
 
 ```bash
 iperf3 --client $IPERF_SERVER_VM_IP --port 9000 --format m --time 60 --parallel 1 --omit 1 --congestion bbr
