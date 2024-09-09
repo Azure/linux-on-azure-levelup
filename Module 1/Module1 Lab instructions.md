@@ -32,91 +32,81 @@ The three VM's we will use are:
 Follow the steps below for all three VM's listed above (EOL-2-RHEL, PostGreSQL, Apache)
 1. Configure Language preference for OS install
 
-![Language Preference](images/PostgreSQL_1.png.png "Language Preference")
+![Language Preference](images/PostgreSQL_1.png "Language Preference")
 
 2. Configure Installation Destination
 
-![Destination](images/PostgreSQL_2.png.png "Destination")
+![Destination](images/PostgreSQL_2.png "Destination")
 
 3. Choose 60 GiB Virtaul Disk to install to
 
-![Install Disk](images/PostgreSQL_3.png.png "Install Disk")
+![Install Disk](images/PostgreSQL_3.png "Install Disk")
 
 4. Configure Network (Toggle Network interface to "ON")
 
-![Network](images/PostgreSQL_4.png.png "Network")
+![Network](images/PostgreSQL_4.png "Network")
 
 5. Begin Installation
 
-![Begin Install](images/PostgreSQL_5.png.png "Begin Install")
+![Begin Install](images/PostgreSQL_5.png "Begin Install")
 
 6. Set Root password to something you can remember for the lab
 
-![Root Password](images/PostgreSQL_6.png.png "Root Password")
+![Root Password](images/PostgreSQL_6.png "Root Password")
 
-![Root Password](images/PostgreSQL_7.png.png "Root Password")
+![Root Password](images/PostgreSQL_7.png "Root Password")
 
 7. Let installation continue to complete (about five minutes)
 
-![Root Password](images/PostgreSQL_8.png.png "Root Password")
+![Root Password](images/PostgreSQL_8.png "Root Password")
 
 8. Reboot system
 
-![Reboot system](images/PostgreSQL_9.png.png "Reboot system")
+![Reboot system](images/PostgreSQL_9.png "Reboot system")
 
 9. Log into VM from the console
 
-![First time login](images/PostgreSQL_10.png.png "First time login")
+![First time login](images/PostgreSQL_10.png "First time login")
 
 10. Find the IP address of the VM by typing "ip addr" at the command line
 
-![IP Address](images/PostgreSQL_11.png.png "IP Address")
+![IP Address](images/PostgreSQL_11.png "IP Address")
 
 11. Using Putty log into the VM using Putty or other SSH client
 
-![Putty](images/PostgreSQL_12.png.png "Putty")
+![Putty](images/PostgreSQL_12.png "Putty")
 
 12. Accept the key fingerprint
 
-![Fingerprint](images/PostgreSQL_13.png.png "Fingerprint")
+![Fingerprint](images/PostgreSQL_13.png "Fingerprint")
 
 13. Log into VM via SSH client
 
-![SSH Client](images/PostgreSQL_14.png.png "SSH Client")
+![SSH Client](images/PostgreSQL_14.png "SSH Client")
 
 14. Switch to the root directory of the VM by typing "cd /" at the command line
 
-![SSH Client](images/PostgreSQL_15.png.png "SSH Client")
+![SSH Client](images/PostgreSQL_15.png "SSH Client")
 
 15. Since CentOS is End of Life we need to use archived repos to update the system, so first back up the exsisting repo file by typing "sudo cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak" at the command line
 
-![Back up old repo](images/PostgreSQL_16.png.png "Back up old repo")
+![Back up old repo](images/PostgreSQL_16.png "Back up old repo")
 
 16. Using curl command lets pull down a copy of active repo's by typing the folliwing at the comamnd line "curl -o /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/AtlasGondal/centos7-eol-repo-fix/main/CentOS-Base.repo"
 
-![New repo file](images/PostgreSQL_18.png.png "New repo file")
+![New repo file](images/PostgreSQL_18.png "New repo file")
 
 17. Now we need to clean the current yum cache by typing the following at the command line "sudo yum clean all"
 
-![New repo file](images/PostgreSQL_19.png.png "New repo file")
+![New repo file](images/PostgreSQL_19.png "New repo file")
 
 18. Now we need to make a new yum cache by typing the following at the command line "sudo yum makecache"
 
-![New repo file](images/PostgreSQL_20.png.png "New repo file")
+![New repo file](images/PostgreSQL_20.png "New repo file")
 
 19. To update the system type the follwoing at the command line "sudo yum update -y"
 
-![New repo file](images/PostgreSQL_21.png.png "New repo file")
-
-
-
-
-
-
-
-
-
-
+![New repo file](images/PostgreSQL_21.png "New repo file")
 
 ## Configure VM's via putty
 
