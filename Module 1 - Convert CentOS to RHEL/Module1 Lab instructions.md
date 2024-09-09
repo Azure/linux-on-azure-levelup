@@ -138,7 +138,7 @@ At the command type "curl --create-dirs -o /etc/rhsm/ca/redhat-uep.pem <https://
 
 At the command type "curl -o /etc/yum.repos.d/convert2rhel.repo <https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo>"
 
-## Installing the Convert2RHEL Utility
+## Installing the Convert2RHEL Utility on LinuxLabVM-CentOS-7-EOL-2-RHEL VM
 
 Now that the requisite repository is enabled on your CentOS Linux system, it is time to install the Convert2RHEL utility and prepare the system for conversion.
 
@@ -154,7 +154,7 @@ At the command type "yum repolist"
 
 At the command type "yum install -y convert2rhel"
 
-## Run the Convert2RHEL Utility
+## Run the Convert2RHEL Utility on LinuxLabVM-CentOS-7-EOL-2-RHEL VM
 
 Before running the Convert2RHEL utility for this lab, you need to tell it to ignore the unknown or incompatible kernel modules.
 The Microsoft kernel modules are not known to the conversion system.
@@ -236,3 +236,5 @@ Solution 4: `echo "export CONVERT2RHEL_OUTDATED_PACKAGE_CHECK_SKIP=1" >> ~/.bash
 
 + AlmaLinux https://wiki.almalinux.org/elevate/ELevating-CentOS7-to-AlmaLinux-9.html
 + Rocky Linux https://docs.rockylinux.org/guides/migrate2rocky/
+
+## Prepare RHEL VM LinuxLabVM-CentOS-7-EOL-2-RHEL VM to migrate into Azure
