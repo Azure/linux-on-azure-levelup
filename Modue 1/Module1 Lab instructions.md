@@ -9,7 +9,7 @@ The CentOS_Lab_Hyper-V_Buildout.ps1 file is used to download the CentOS iso's an
 
 ## Run Powershell script to build out a local Hyper-V lab on a Windows 11 client.
 
-[!TIP]The Powershell script uses 1GB of RAM per VM it builds. This can be adjusted manually within the scipt prior to running if your system does not have enough of RAM to support all the VM's.
+**NOTE** The Powershell script uses 1GB of RAM per VM it builds. This can be adjusted manually within the scipt prior to running if your system does not have enough of RAM to support all the VM's.
 
 ## Lab Access Web Server
 
