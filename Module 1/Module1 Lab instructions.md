@@ -15,11 +15,20 @@ The CentOS_Lab_Hyper-V_Buildout.ps1 file is used to download the CentOS iso's an
 
 2. Once the Script has completed, you should have six new VM's as seen in the picture below:
 
-![Linux Lab centOS EOL](images/Hyper-V-Manager-CentOS-EOL-Lab.png "Linux Lab CentOS EOL")
+![Linux Lab centOS EOL](images/Hyper-V-Manager-CentOS-EOL-Lab-v2.png "Linux Lab CentOS EOL")
 
 ## Install CentOS on Hyper-V VM's via the GUI
 
 There are six VM's deployed in this lab, three of them will be used for Rehost, Redploy and Modernize sections to follow. The other three are deployed so that at any time you can explore using the different versions of distro's which include Minimal, Everything and Live ISO's to deploy and or interact with the OS.
+
+For the three VM's that will be used for Module 1 and Module 2, you will follow the same steps to install the OS via the GUI and then update via the command line using Putty or similar program.
+
+The three VM's we will use are:
+
++ LinuxLabVM-CentOS-7-EOL-2-RHEL
++ LinuxLabVM-CentOS-7-PostGreSQL
++ LinuxLabVM-CentOS-7-Apache
+
 
 ## Lab Access Web Server
 
