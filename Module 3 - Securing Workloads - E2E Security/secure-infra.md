@@ -358,7 +358,7 @@ az network nsg rule create \
 
 ### Step 9: Create public IP address for Azure NAT Gateway
 
-The backend VM does not need a public IP, we are going to add a NAT Gateway for Outbound Internet connection. We're adding this just for LAB purposes to show how you can use NAT GW to allow outbound internet connection implicitly.
+The backend VM does not need a public IP, we are going to add a NAT Gateway for Outbound Internet connection. We're adding this just for LAB purposes to show how you can use NAT GW to allow outbound internet connection explicitly.
 
 ```bash
 export NAT_PUBLIC_IP_NAME="nat-ip-levelup-${SUFFIX}"
@@ -438,6 +438,8 @@ az network bastion create \
 
 ## TASK 5: Create backend VM and Connect via SSH 
 
+### Step 1: Create backend VM 
+
 Now create a virtual machine, which is attached to the *myBackendSubnet*. Notice that the `--nsg` argument has a value of empty double quotes. An NSG does not need to be created with the VM. The VM is attached to the backend subnet, which is protected with the pre-created backend NSG. This NSG applies to the VM. Also, notice here that the `--public-ip-address` argument has a value of empty double quotes. This configuration creates a VM without a public IP address.
 
 ```azurecli-interactive
@@ -468,7 +470,7 @@ The backend VM is only accessible on port *22* from bastion subnet and on port *
 az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myBackendNSG --output table
 ```
 
-### Step 2 : Enable Azure AD Login for Backend VM
+### Step 2: Enable Azure AD Login for Backend VM
 
 ```bash
 az vm extension set \
@@ -478,6 +480,7 @@ az vm extension set \
     --vm-name myBackendVM \
     --output tsv
 ```
+### Step 3: Connect to backend VM through bastion
 
 Connect to myBackendVM with your AD account through the Bastion Host we created above .
 
@@ -495,7 +498,7 @@ az network bastion ssh --name $BASTION_NAME --resource-group $RESOURCE_GROUP_NAM
 #### Step 1: Enable *Defender for Servers Plan 2* on Azure subscription
 
 ```azurecli-interactive
-az security pricing create --name VirtualMachines --tier Standard --sub-plan P2
+az security pricing create --name VirtualMachines --tier Standard --subplan P2
 ```
 
 #### Step 2:  Enable JIT on your frontend Virtual Machine
