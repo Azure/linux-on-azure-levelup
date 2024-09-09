@@ -285,13 +285,13 @@ az vm extension set \
     --output tsv
 ```
 
-### Step 8: Secure VM to VM traffic
+### Step 5: Secure VM to VM traffic
 
 Network security group rules can also apply between VMs. For this example, the frontend VM needs to communicate with the backend VM on port *3306* and Bastion host needs to reach out to backend VM on port *22*. This configuration allows SSH connections from the Bastion Host, and also allow an application on the frontend VM to communicate with a backend MySQL database. All other traffic should be blocked between the frontend and backend virtual machines.
 
 Use the *az network nsg rule create* command to create a rule for port 22. Notice that the `--source-address-prefix` argument specifies a value of *10.0.1.0/24* for forntend VM subnet and *10.0.3.0/26 * for Bastion subnet. This configuration ensures that only traffic from the frontend subnet is allowed for port *3306* and bastion subnet for port *22* through the NSG.
 
-NSG rule for Bastion subnet:  
+Add a NSG rule to allow SSH(22) access from AzureBastionSubnet(10.0.3.0/26) to backend subnet 
 
 ```azurecli-interactive
 az network nsg rule create \
@@ -342,7 +342,7 @@ az network nsg rule create \
   --destination-port-range "*"
 ```
 
-### Step 9: Create public IP address for Azure NAT Gateway
+### Step 6: Create public IP address for Azure NAT Gateway
 
 The backend VM does not need a public IP, we are going to add a NAT Gateway for Outbound Internet connection. We're adding this just for LAB purposes to show how you can use NAT GW to allow outbound internet connection explicitly.
 
@@ -360,7 +360,7 @@ az network public-ip create \
     --output tsv
 ```
 
-### Step 10: Create NAT gateway resource
+### Step 7: Create NAT gateway resource
 
 ```bash
 export NAT_GW_NAME="nat-levelup-${SUFFIX}"
@@ -374,7 +374,7 @@ az network nat gateway create \
     --output tsv
 ```
 
-### Step 11 : Configure NAT gateway for the backend subnet
+### Step 8 : Configure NAT gateway for the backend subnet
 
 ```bash
 az network vnet subnet update \
@@ -513,6 +513,8 @@ Run the following command to add the SSH extension for the Azure CLI:
 ```bash
 az extension add --name ssh
 ```
+
+ssh to frontend VM through *az ssh*
 
 ```azurecli-interactive
 az ssh vm --name myFrontendVM --resource-group $RESOURCE_GROUP_NAME
