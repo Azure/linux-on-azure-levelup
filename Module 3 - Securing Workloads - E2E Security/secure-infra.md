@@ -227,9 +227,17 @@ az network vnet subnet update \
 
 ### Step 2: Secure incoming traffic
 
-When the frontend VM was created, an NSG rule was created to allow incoming traffic on port 22. This rule allows SSH connections to the VM. For this example, traffic should also be allowed on ports *80* and *443*. This configuration allows a web application to be accessed on the VM.
+When the frontend VM was created, an NSG rule *default-allow-ssh* named was created to allow incoming traffic on port 22. This default rule allows SSH connections to the VM. We'll delete the *default-allow-ssh* rule since we do not want to keep port *22* open publicly. We'll configure Just-in Time Access (JIT) for frontend VM ssh connection on upcoming steps(Task 6).  
+For this example, traffic should also be allowed on ports *80* and *443*. This configuration allows a web application to be accessed on the VM.
 
 Use the *az network nsg rule create* command to create a rule for port *80* and *443*.
+
+Delete default port 22 permission with *az network nsg rule delete* command
+
+```azurecli-interactive
+az network nsg rule delete  --resource-group $RESOURCE_GROUP_NAME   --nsg-name myFrontendNSG   --name default-allow-ssh
+```
+Create NSG rule for incoming web traffic on port 80 and 443
 
 ```azurecli-interactive
 az network nsg rule create \
@@ -246,7 +254,7 @@ az network nsg rule create \
   --destination-port-ranges 80 443
 ```
 
-The frontend VM is only accessible on port *22*, port *80* and port *443*. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the *az network rule list* command.
+The frontend VM is only accessible on port port *80* and port *443*. All other incoming traffic is blocked at the network security group. It may be helpful to visualize the NSG rule configurations. Return the NSG rule configuration with the *az network rule list* command.
 
 ```azurecli-interactive
 az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myFrontendNSG --output table
@@ -264,15 +272,7 @@ SCOPE=$(az group show -n  $RESOURCE_GROUP_NAME  -o tsv --query id)
 
 az role assignment create --role "Virtual Machine Administrator Login" --assignee $USERNAME --scope $SCOPE
 ```
-
-### Step 4: Install the SSH extension for the Azure CLI
-
-Run the following command to add the SSH extension for the Azure CLI:
-
-```bash
-az extension add --name ssh
-```
-### Step 5: Enable Azure AD Login for a Linux virtual machine in Azure
+### Step 4: Enable Azure AD Login for a Linux virtual machine in Azure
 
 The following code example installs the extension to enable an Azure AD Login for a Linux VM. VM extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines.
 
@@ -283,20 +283,6 @@ az vm extension set \
     --resource-group $RESOURCE_GROUP_NAME \
     --vm-name myFrontendVM \
     --output tsv
-```
-
-### Step 6: Log in by using a Microsoft Entra user account to SSH into the Linux VM
-
-```bash
-az ssh vm --name myFrontendVM --resource-group $RESOURCE_GROUP_NAME
-```
-
-### Step 7: Export the SSH configuration for use with SSH clients that support OpenSSH
-
-Sign in to Azure Linux VMs with Microsoft Entra ID supports exporting the OpenSSH certificate and configuration. That means you can use any SSH clients that support OpenSSH-based certificates to sign in through Microsoft Entra ID. The following example exports the configuration for all IP addresses assigned to the VM:
-
-```bash
-az ssh config --file ~/.ssh/config --name myFrontendVM --resource-group $RESOURCE_GROUP_NAME
 ```
 
 ### Step 8: Secure VM to VM traffic
@@ -470,7 +456,7 @@ The backend VM is only accessible on port *22* from bastion subnet and on port *
 az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myBackendNSG --output table
 ```
 
-### Step 2: Enable Azure AD Login for Backend VM
+### Step 2: Enable Azure AD Login for Backend  and Frontend VMs
 
 ```bash
 az vm extension set \
@@ -480,6 +466,7 @@ az vm extension set \
     --vm-name myBackendVM \
     --output tsv
 ```
+
 ### Step 3: Connect to backend VM through bastion
 
 Connect to myBackendVM with your AD account through the Bastion Host we created above .
@@ -520,6 +507,12 @@ Note: it is currently only possible to enable JIT access and create a JIT reques
 You should now be able to connect to the VM using the SSH client on your local machine.
 
 #### Step 4:  Connect to your frontend VM via JIT using Entra ID
+
+Run the following command to add the SSH extension for the Azure CLI:
+
+```bash
+az extension add --name ssh
+```
 
 ```azurecli-interactive
 az ssh vm --name myFrontendVM --resource-group $RESOURCE_GROUP_NAME
