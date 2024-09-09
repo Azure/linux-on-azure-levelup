@@ -262,7 +262,7 @@ az network nsg rule list --resource-group $RESOURCE_GROUP_NAME --nsg-name myFron
 
 ### Step 3: Configure role assignments for the VM
 
-The following example uses az role assignment create to assign the Virtual Machine Administrator Login role to the VM for your current Azure user. You obtain the username of your current Azure account by using az account show, and you set the scope to the VM created in a previous step by using az vm show. This role is needed for using AADSSH with VM. Y
+The following example uses az role assignment create to assign the Virtual Machine Administrator Login role to the VM for your current Azure user. You obtain the username of your current Azure account by using az account show, and you set the scope to the VM created in a previous step by using az vm show. This role is needed for using AADSSH with VM.
 
 You can also assign the scope at a resource group or subscription level.We'll use resource group for scope. 
 
