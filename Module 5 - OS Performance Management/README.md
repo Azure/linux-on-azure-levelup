@@ -5,9 +5,13 @@ It will cover the following LAB topics:
 1. Obtaining performance metrics from a Linux system
 1. Test network performance using iperf3
 
-All of the commands below are meant to be run on a Ubuntu 24.04 LTS machine previously installed in the Azure-Infra Lab, using sudo or root privileges. The below commands have been tested on WSL2 installation and the latest azure-cli version.
+> [!IMPORTANT]
+> All of the commands below are meant to be run on a Ubuntu 24.04 LTS machine previously installed in the Azure-Infra Lab, using sudo or root privileges.
+> The below commands have been tested on WSL2 installation and the latest azure-cli version.
 
 ## LAB 1: Obtaining performance metrics from a Linux system
+
+This lab was created and inspired by the content of our amazing support colleagues Diego Vargas - @divargas, Esteban Flores - @esflores and Marco Bicca - @mabicca.
 
 **Intro:**
 There are several commands that can be used to obtain performance counters on Linux. Commands such as vmstat and uptime, provide general system metrics such as CPU usage, System Memory, and System load. Most of the commands are already installed by default with others being readily available in default repositories. The commands can be separated into:
@@ -15,6 +19,8 @@ There are several commands that can be used to obtain performance counters on Li
 - CPU
 - Memory
 - Disk I/O
+- Networking
+- Processes
 
 **TASK:**
 
@@ -27,6 +33,13 @@ There are several commands that can be used to obtain performance counters on Li
      - free
    - I/O
      - iostat
+   - Networking
+     - ping
+     - qperf
+   - Processes
+     - pidstat
+     - ps
+     - top
 
 ### Step 1: CPU
 
@@ -176,7 +189,7 @@ Some details to keep in mind when reviewing the output for free:
 
 #### iostat
 
-The iostat utility provides an overview of disk I/O utilization.
+The `iostat` utility provides an overview of disk I/O utilization and can help identify bottlenecks that are related to the disk subsystem.
 
 ```bash
 iostat -dxtm 1 5
@@ -190,6 +203,172 @@ The options and arguments are:
 - -m: Display in MB/s.
 - 1: The first numeric argument indicates how often to refresh the display in seconds.
 - 2: The second numeric argument indicates how many times the data refreshes.
+
+If you include the extra parameters, the output resembles the following text:
+
+```output
+    [host@rhel76 ~]$ iostat -dxctm 1
+    Linux 3.10.0-957.21.3.el7.x86_64 (rhel76)       08/05/2019      _x86_64_        (1 CPU)
+        08/05/2019 07:03:36 PM
+    avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+               3.09    0.00    2.28    1.50    0.00   93.14
+    
+    Device:         rrqm/s   wrqm/s     r/s     w/s    rMB/s    wMB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+    sda               0.02     0.52    9.66    2.46     0.31     0.10    70.79     0.27   23.97    6.68   91.77   2.94   3.56
+    sdd               0.00     0.00    0.12    0.00     0.00     0.00    64.20     0.00    6.15    6.01   12.50   4.44   0.05
+    sdb               0.00    22.90    0.47    0.45     0.01     5.74 12775.08     0.17  183.10    8.57  367.68   8.01   0.74
+    sdc               0.00     0.00    0.15    0.00     0.00     0.00    54.06     0.00    6.46    6.24   14.67   5.64   0.09
+    md0               0.00     0.00    0.15    0.01     0.00     0.00    89.55     0.00    0.00    0.00    0.00   0.00   0.00
+```
+
+Things to look out for:
+
+- Look for `r/s` and `w/s` (IOPS) and `rMB/s` and `wMB/s` and verify that these values are within the limits of the given disk. If the values are close or higher the limits, the disk are going to be throttled, leading to high latency. This information can also be corroborated with the `%iowait` metric from `mpstat`.
+- The latency is an excellent metric to verify if the disk is performing as expected. Normally, less than `9ms` is the expected latency for PremiumSSD, other offerings have different latency targets.
+- The queue size is a great indicator of saturation. Normally, requests would be served near real time and the number remains close to one (as the queue never grows). A higher number could indicate disk saturation (that is, requests queuing up). There's no good or bad number for this metric. Understanding that anything higher than one means that requests are queuing up helps determine if there's disk saturation.
+
+### Step 4: Networking
+
+Fore latency and throughput metrics, the `ping` and `qperf` utilities can be used to measure network performance.
+
+#### ping
+
+```bash
+ping -c 5 xbox.com
+
+PING xbox.com (20.76.201.171) 56(84) bytes of data.
+64 bytes from 20.76.201.171: icmp_seq=1 ttl=105 time=38.8 ms
+64 bytes from 20.76.201.171: icmp_seq=2 ttl=105 time=40.0 ms
+64 bytes from 20.76.201.171: icmp_seq=3 ttl=105 time=39.0 ms
+64 bytes from 20.76.201.171: icmp_seq=4 ttl=105 time=39.9 ms
+64 bytes from 20.76.201.171: icmp_seq=5 ttl=105 time=39.2 ms
+
+--- xbox.com ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4005ms
+rtt min/avg/max/mdev = 38.833/39.392/40.048/0.482 ms
+```
+
+#### qperf
+
+Install qperf with the following command:
+
+```bash
+sudo apt install -y qperf
+```
+
+To test network performance between two systems, the `qperf` utility can be used. The `qperf` utility is a network bandwidth and latency measurement tool that can be used to measure network performance between two systems.
+
+```bash
+qperf -vvs <server_hostname_or_ip_address> tcp_lat
+```
+
+For network bandwidth measurements, the `tcp_bw` test can be used.
+
+```bash
+qperf -vvs <server_hostname_or_ip_address> tcp_bw
+```
+
+### Step 5: Processes
+
+Gathering details on a per process basis helps understand where the load of the system is coming from.
+The main utility to gather process statics is `pidstat` as it provides details per process for CPU, Memory, and I/O statistics.
+Lastly, a simple `ps` to sort process by top CPU, and memory usage complete the metrics.
+
+#### pidstat
+
+To gather process CPU statistics, run pidstat without any options:
+
+The following commands can be used if you want to execute it from Azure CLI:
+
+```bash
+ pidstat 1 2
+Linux 5.15.153.1-microsoft-standard-WSL2 (DESKTOP-52L2ATU)      09/09/24        _x86_64_        (4 CPU)
+
+18:25:31      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+18:25:32     1000       381    1.00    2.00    0.00    0.00    3.00     0  node
+
+18:25:32      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+18:25:33     1000       381    1.00    0.00    0.00    0.00    1.00     0  node
+18:25:33     1000      2722    0.00    1.00    0.00    0.00    1.00     3  pidstat
+18:25:33     1000      9826    1.00    4.00    0.00    0.00    5.00     0  node
+
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+Average:     1000       381    1.00    1.00    0.00    0.00    2.00     -  node
+Average:     1000      2722    0.00    0.50    0.00    0.00    0.50     -  pidstat
+Average:     1000      9826    0.50    2.00    0.00    0.00    2.50     -  node
+```
+
+Things to look out for:
+
+- Look for processes with high %wait (iowait) percentage as it might indicate processes that are blocked waiting for I/O, which might also indicate disk saturation.
+- Verify that no single process consumes 100% of the CPU as it might indicate a single threaded application.
+
+#### ps
+
+Lastly ps command displays system processes, and can be either sorted by CPU or Memory.
+
+To sort by CPU and obtain the top 10 processes:
+
+```bash
+ps aux --sort=-%cpu | head -10
+
+      PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root        2200 57.0 43.1 14248092 14175632 pts/1 R+ 16:55   0:08 stress-ng --cpu 12 --vm 2 --vm-bytes 120% --iomix 4 --timeout 240
+root        2199 43.0 33.0 14248092 10871144 pts/1 R+ 16:55   0:06 stress-ng --cpu 12 --vm 2 --vm-bytes 120% --iomix 4 --timeout 240
+root        1231  0.2  0.1 336308 33764 ?        Sl   16:46   0:01 /usr/bin/python3 -u bin/WALinuxAgent-2.9.1.1-py3.8.egg -run-exthandlers
+root         835  0.0  0.0 127076 24860 ?        Ssl  16:46   0:00 /usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid
+root        1199  0.0  0.0  30164 15600 ?        Ss   16:46   0:00 /usr/bin/python3 -u /usr/sbin/waagent -daemon
+root           1  0.2  0.0 173208 12356 ?        Ss   16:46   0:01 /usr/lib/systemd/systemd --switched-root --system --deserialize 31
+root         966  0.0  0.0 3102460 10936 ?       Sl   16:46   0:00 /var/lib/waagent/Microsoft.GuestConfiguration.ConfigurationforLinux-1.26.60/GCAgent/GC/gc_linux_service
+panzer      1803  0.0  0.0  22360  8220 ?        Ss   16:49   0:00 /usr/lib/systemd/systemd --user
+root        2180  0.0  0.0  73524  6968 pts/1    SL+  16:55   0:00 stress-ng --cpu 12 --vm 2 --vm-bytes 120% --iomix 4 --timeout 240
+```
+
+#### top
+
+The `top` command displays real-time system metrics, including CPU, memory, and I/O usage. It can be used to identify processes that are consuming the most resources.
+
+```bash
+top
+```
+
+The output:
+
+```text
+top - 13:51:19 up 2 days,  6:09,  0 user,  load average: 0.53, 0.38, 0.29
+Tasks:  56 total,   1 running,  55 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  1.0 us,  0.6 sy,  0.0 ni, 98.3 id,  0.0 wa,  0.0 hi,  0.2 si,  0.0 st
+MiB Mem :   7946.9 total,   3948.1 free,   2966.7 used,   1338.8 buff/cache
+MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   4980.1 avail Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 9119 admn      20   0   23.5g   1.2g  55416 S   3.0  15.5   1:17.01 /home/admn/.vscode-server/bin/4849ca9bdf9666755eb463db297b69e5385090e3/node --dns-result-order=ipv4first /home/admn/.vscode-server/bin/4849+
+    1 root      20   0    2476   1712   1600 S   0.0   0.0   0:01.72 /init
+    5 root      20   0    2540   1132   1132 S   0.0   0.0   0:00.58 plan9 --control-socket 5 --log-level 4 --server-fd 6 --pipe-fd 8 --log-truncate
+   22 root      20   0    2496    116      0 S   0.0   0.0   0:00.56 /init
+   55 admn      20   0    8544   3916   3000 S   0.0   0.0   0:03.21 ssh-agent
+  104 root      20   0   35868  23172   5180 S   0.0   0.3   0:43.33 /usr/bin/python3 /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+  107 nobody    20   0   12964   5552   3948 S   0.0   0.1   0:03.74 /usr/sbin/dnsmasq -k
+  108 root      20   0 2327412  82836  53284 S   0.0   1.0   0:21.23 /usr/bin/dockerd -p /var/run/docker.pid
+  113 root      20   0   29328   5344   4652 S   0.0   0.1   0:00.00 /usr/sbin/pcscd --foreground
+  114 root      20   0   24320   6468   4920 S   0.0   0.1   0:09.72 /lib/systemd/systemd-udevd
+```
+
+Things to look out for:
+
+- The `PID` column indicates the process ID.
+- The `USER` column indicates the user that owns the process.
+- The `%CPU` column indicates the percentage of CPU usage.
+- The `%MEM` column indicates the percentage of memory usage.
+- The `TIME+` column indicates the total CPU time the process has used.
+- The `COMMAND` column indicates the command that is being executed.
+
+The load average values are displayed at the top of the output. The load average values represent the average number of processes that are waiting to run on the CPU over the last 1, 5, and 15 minutes.
+
+For the Cpu(s) section, the `%us` column indicates the percentage of CPU time spent running user processes, the `%sy` column indicates the percentage of CPU time spent running system processes, and the `%id` column indicates the percentage of CPU time spent idle.
+If the system is presenting a high value for wa, it might indicate that the system is waiting for I/O operations to complete. This could be due to a disk bottleneck.
+If you observe a high value for si and hi it indicates that software interrupts and hardware interrupts are consuming a lot of CPU time. This could be due to a network or disk bottleneck.
+Finally if you observe a high value for st it indicates that the system is spending a lot of time in a hypervisor. This could be due to a CPU bottleneck.
 
 ## LAB 2: Using two Azure VMs to test network performance using iperf3
 
@@ -308,6 +487,7 @@ package_reboot_if_require: false
 packages:
   - iperf3
   - sysstat
+  - qperf
 EOF
 ```
 
@@ -557,16 +737,17 @@ az network vnet peering create \
 1. SSH into the iperf3-server-vm via the Azure Bastion Host
 
 > [!CAUTION]
-> Run the following commands in a separate terminal window to establish an SSH tunnel to the Azure VM. For those running in Azure Shell please use any terminal mulitplexor like tmux or screen to run the following commands.
+> Working with Bastion tunnels please run the following commands in a separate terminal window to establish an SSH tunnel to the Azure VM. For those running in Azure Shell please use any terminal mulitplexor like tmux or screen to run the following commands. You could use the CTRL+Z to pause the current process and then run bg 1 to run the process in the background for the current shell session and the same CTRL+Z and bg 2 for the second process.
 
 ```bash
 export IPERF_SERVER_RESOURCE_GROUP_NAME="rg-iperf3-server-<SUFFIX>" #replace <SUFFIX> with the actual value
-export IPERF_SERVER_NAME="vm-iperf3-server-<SUFFIX>" #replace <SUFFIX> with the actual value
+export IPERF_SERVER_VM_NAME="vm-iperf3-server-<SUFFIX>" #replace <SUFFIX> with the actual value
+export BASTION_NAME="bastion-<SUFFIX>" #replace <SUFFIX> with the actual value
 
-export IPERF_SERVER_VM_ID="$(az vm show -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" -n "$IPERF_SERVER_NAME" --query id -o tsv)"
+export IPERF_SERVER_VM_ID="$(az vm show -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" -n "$IPERF_SERVER_VM_NAME" --query id -o tsv)"
 
 az network bastion tunnel -n $BASTION_NAME -g "$IPERF_SERVER_RESOURCE_GROUP_NAME" \
-   --target-resource-id $IPERF_SERVER_VM_ID --resource-port 22 --port 2022
+   --target-resource-id "$IPERF_SERVER_VM_ID" --resource-port 22 --port 2022 # CTRL+Z ; bg 1
 ```
 
 ```bash
@@ -583,35 +764,65 @@ iperf3 --server --port 9000 --format m
 > An alternative way of running the iperf3 server is to run it in the background using the nohup command via the Azure CLI run-command extension.
 
    ```bash
-   az vm run-command invoke -g $IPERF_SERVER_RESOURCE_GROUP_NAME -n $IPERF_SERVER_VM_NAME --command-id RunShellScript --scripts "nohup iperf3 --server --port 9000 --format m > /var/log/iperf3.log 2>&1 &"
+   az vm run-command invoke \
+   -g $IPERF_SERVER_RESOURCE_GROUP_NAME \
+   -n $IPERF_SERVER_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "iperf3 --server --port 9000 --format m &" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
    ```
 
-2. Start the iperf3 client on the iperf3-client-vm.
+In order to check if the port is listening on the iperf3-server-vm, run the following command:
+
+```bash
+az vm run-command invoke \
+   -g $IPERF_SERVER_RESOURCE_GROUP_NAME \
+   -n $IPERF_SERVER_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "ss -ntulp | grep 9000" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
+   ```
+
+2. Start the iperf3 test on the client VM iperf3-client-vm.
 
 ```bash
 export IPERF_SERVER_VM_IP=$(az network nic show -g $IPERF_SERVER_RESOURCE_GROUP_NAME -n $VM_NIC_SERVER_NAME --query "ipConfigurations[0].privateIPAddress" -o tsv)
 
-az vm run-command invoke -g $IPERF_CLIENT_RESOURCE_GROUP_NAME -n $IPERF_CLIENT_VM_NAME --command-id RunShellScript --scripts "nohup iperf3 --client $IPERF_SERVER_VM_IP --port 9000 --format m --time 60 --parallel 1 --omit 1 > /var/log/iperf3-client.log 2>&1 &" 
+az vm run-command invoke \
+   -g $IPERF_CLIENT_RESOURCE_GROUP_NAME \
+   -n $IPERF_CLIENT_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "iperf3 --client $IPERF_SERVER_VM_IP --port 9000 --format m --time 60 --parallel 1 --omit 1" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
+```
+
+```text
+-----------------------------------------------------------
+Server listening on 9000 (test #1)
+-----------------------------------------------------------
+Accepted connection from 10.220.0.4, port 57340
+[  5] local 10.230.0.4 port 9000 connected to 10.220.0.4 port 57344
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec  6.25 MBytes  52.4 Mbits/sec                  (omitted)
+[  5]   0.00-1.00   sec  27.5 MBytes   230 Mbits/sec
+[  5]   1.00-2.00   sec  30.1 MBytes   253 Mbits/sec
+[  5]   2.00-3.00   sec  27.1 MBytes   228 Mbits/sec
+[  5]   3.00-4.00   sec  26.4 MBytes   221 Mbits/sec
+[  5]   4.00-5.00   sec  27.8 MBytes   233 Mbits/sec
+[  5]   5.00-6.00   sec  30.6 MBytes   257 Mbits/sec
+[  5]   6.00-7.00   sec  31.6 MBytes   265 Mbits/sec
+[  5]   7.00-8.00   sec  31.0 MBytes   260 Mbits/sec
+[  5]   8.00-9.00   sec  33.2 MBytes   279 Mbits/sec
+...
+[  5]  59.00-60.00  sec  30.0 MBytes   252 Mbits/sec
+[  5]  60.00-60.11  sec  3.12 MBytes   249 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-60.11  sec  1.70 GBytes   243 Mbits/sec                  receiver
 ```
 
 > [!IMPORTANT]
-> As we can observer with the default settings the network performance is not optimal and we are not close to the advised line speed of the Azure VMs.
-
-```text
-Connecting to host 10.230.0.4, port 9000
-[ 5] local 10.220.0.4 port 34018 connected to 10.230.0.4 port 9000
-[ ID] Interval Transfer Bitrate Retr Cwnd
-[ 5] 0.00-1.00 sec 9.38 MBytes 78.6 Mbits/sec 0 5.75 MBytes (omitted)
-[ 5] 0.00-1.00 sec 35.5 MBytes 297 Mbits/sec 0 8.01 MBytes
-[ 5] 1.00-2.00 sec 35.6 MBytes 299 Mbits/sec 0 8.01 MBytes
-[ 5] 2.00-3.00 sec 39.4 MBytes 330 Mbits/sec 0 8.01 MBytes
-[ 5] 3.00-4.00 sec 35.5 MBytes 298 Mbits/sec 0 8.01 MBytes
-[ 5] 4.00-5.00 sec 35.5 MBytes 298 Mbits/sec 0 8.01 MBytes
-[ 5] 5.00-6.00 sec 32.5 MBytes 273 Mbits/sec 15 5.62 MBytes
-[ 5] 6.00-7.00 sec 34.6 MBytes 290 Mbits/sec 0 5.62 MBytes
-[ 5] 7.00-8.00 sec 38.2 MBytes 321 Mbits/sec 0 5.62 MBytes
-[ 5] 8.00-9.00 sec 33.2 MBytes 279 Mbits/sec 8 3.95 MBytes
-```
+> As we can observe with the default settings the network performance is not optimal and we are not close to the advised line speed of the Azure VMs.
 
 ### Step 4: Tuning the sysctl parameters
 
@@ -620,18 +831,45 @@ By increasing the kernel buffers and changing the congestion control algorithm t
 Modify the sysctl parameters on **BOTH** Azure VMs to improve network performance.
 
 ```bash
-sudo cat << EOF > /etc/sysctl.d/99-azure-network-buffers.conf  
+az vm run-command invoke \
+   -g $IPERF_CLIENT_RESOURCE_GROUP_NAME \
+   -n $IPERF_CLIENT_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "cat << EOF > /etc/sysctl.d/99-azure-network-buffers.conf  
 net.core.rmem_max = 2147483647  
 net.core.wmem_max = 2147483647  
 net.ipv4.tcp_rmem = 4096 67108864 1073741824  
 net.ipv4.tcp_wmem = 4096 67108864 1073741824  
-EOF 
+EOF" -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
+
+az vm run-command invoke \
+   -g $IPERF_SERVER_RESOURCE_GROUP_NAME \
+   -n $IPERF_SERVER_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "cat << EOF > /etc/sysctl.d/99-azure-network-buffers.conf  
+net.core.rmem_max = 2147483647  
+net.core.wmem_max = 2147483647  
+net.ipv4.tcp_rmem = 4096 67108864 1073741824  
+net.ipv4.tcp_wmem = 4096 67108864 1073741824  
+EOF" -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
 ```
 
 Apply the changes to the sysctl parameters on **BOTH** Azure VMs.
 
 ```bash
-sudo sysctl -p /etc/sysctl.d/99-azure-network-buffers.conf
+az vm run-command invoke \
+   -g $IPERF_CLIENT_RESOURCE_GROUP_NAME \
+   -n $IPERF_CLIENT_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "sysctl -p /etc/sysctl.d/99-azure-network-buffers.conf" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
+
+az vm run-command invoke \
+   -g $IPERF_SERVER_RESOURCE_GROUP_NAME \
+   -n $IPERF_SERVER_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "sysctl -p /etc/sysctl.d/99-azure-network-buffers.conf" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
 ```
 
 ### Step 5: Repeat the iperf3 test
@@ -642,9 +880,81 @@ sudo sysctl -p /etc/sysctl.d/99-azure-network-buffers.conf
 On the client side Azure VM please repeat the iperf3 test to measure the network performance after tuning the sysctl parameters.
 
 ```bash
-sudo modprobe tcp_bbr
+az vm run-command invoke \
+   -g $IPERF_CLIENT_RESOURCE_GROUP_NAME \
+   -n $IPERF_CLIENT_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "modprobe tcp_bbr" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
+
+az vm run-command invoke \
+   -g $IPERF_SERVER_RESOURCE_GROUP_NAME \
+   -n $IPERF_SERVER_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "modprobe tcp_bbr" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
 ```
 
+Repeat the iperf3 test to measure the network performance after tuning the sysctl parameters.
+
 ```bash
-iperf3 --client $IPERF_SERVER_VM_IP --port 9000 --format m --time 60 --parallel 1 --omit 1 --congestion bbr
+az vm run-command invoke \
+   -g $IPERF_CLIENT_RESOURCE_GROUP_NAME \
+   -n $IPERF_CLIENT_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "nohup iperf3 --client $IPERF_SERVER_VM_IP --port 9000 --format m --time 60 --parallel 1 --omit 1 --congestion bbr" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d' 
+```
+
+```text
+[  5]  12.00-13.00  sec  62.9 MBytes   527 Mbits/sec    0   18.0 MBytes
+[  5]  13.00-14.00  sec  63.0 MBytes   529 Mbits/sec    0   18.4 MBytes
+[  5]  14.00-15.00  sec   126 MBytes  1056 Mbits/sec    0   18.3 MBytes
+...
+[  5]  53.00-54.00  sec  63.0 MBytes   529 Mbits/sec    0   18.0 MBytes
+[  5]  54.00-55.00  sec   126 MBytes  1057 Mbits/sec    0   18.1 MBytes
+[  5]  55.00-56.00  sec  63.2 MBytes   531 Mbits/sec    0   18.4 MBytes
+[  5]  56.00-57.00  sec   126 MBytes  1054 Mbits/sec    0   18.3 MBytes
+...
+[  5]  59.00-60.00  sec   126 MBytes  1057 Mbits/sec    0   18.1 MBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-60.00  sec  5.03 GBytes   720 Mbits/sec    0             sender
+[  5]   0.00-60.10  sec  4.92 GBytes   703 Mbits/sec                  receiver
+
+iperf Done.
+```
+
+### Step 4: qdisc and tc commands
+
+The `tc` command is used to configure traffic control in Linux. It is used to configure the Linux kernel packet scheduler. The `qdisc` command is used to configure queuing disciplines in Linux. It is used to configure the queuing discipline for a network interface.
+
+To show the queuing discipline on the iperf3-client-vm please run the following command:
+
+```bash
+az vm run-command invoke \
+   -g $IPERF_CLIENT_RESOURCE_GROUP_NAME \
+   -n $IPERF_CLIENT_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "tc qdisc show" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
+```
+
+```text
+qdisc noqueue 0: dev lo root refcnt 2
+qdisc mq 0: dev eth0 root
+qdisc pfifo_fast 0: dev eth0 parent :1 bands 3 priomap 1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+qdisc mq 0: dev enP1331s1 root
+qdisc pfifo_fast 0: dev enP1331s1 parent :1 bands 3 priomap 1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+```
+
+To change the queuing discipline to FQ-CoDel use the command below:
+
+```bash
+az vm run-command invoke \
+   -g $IPERF_CLIENT_RESOURCE_GROUP_NAME \
+   -n $IPERF_CLIENT_VM_NAME \
+   --command-id RunShellScript \
+   --scripts "tc qdisc replace dev eth0 root fq_codel" \
+   -o JSON | jq -r '.value[0].message' | awk '/\[stdout\]/,/\[stderr\]/' | sed '/\[stdout\]/d' | sed '/\[stderr\]/d'
 ```
