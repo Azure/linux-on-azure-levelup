@@ -42,7 +42,7 @@ Set the following variables to create the Azure resources.
 ```bash
 export SUFFIX=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 export RESOURCE_GROUP_NAME="rg-levelup-${SUFFIX}"
-export VNET_NAME="mvVNet-${SUFFIX}"
+export VNET_NAME="myVNet-${SUFFIX}"
 export VM_ADMIN_USER="azureuser"
 export VM_IMAGE="Canonical:ubuntu-24_04-lts:server:latest"
 export REGION="swedencentral"
@@ -158,7 +158,7 @@ EOF
 
 ### Step 3: Generate SSH key pair using ED25519 encryption
 
-ED25519 ssh keys are public preview now. You can use ED25519 or RSA keys. ED25519 ssh keys provides better security and performance. The following command creates an SSH key pair using ED25519 encryption with a fixed length of 256 bits:
+ED25519 ssh keys are in *Public Preview*. You can use ED25519 or RSA keys. ED25519 ssh keys provides better security and performance. The following command creates an SSH key pair using ED25519 encryption with a fixed length of 256 bits:
 
 ```bash
 ssh-keygen -m PEM -t ed25519 -f $HOME/id_ed25519_levelup_key.pem -C "LevelUp Linux VM SSH Key"
@@ -437,7 +437,7 @@ az vm create \
   --public-ip-address "" \
   --assign-identity \
   --nsg "" \
-  --image $VM_IMAGE \
+  --image Ubuntu2204 \
   --assign-identity \
   --accelerated-networking true \
   --storage-sku os=Premium_LRS \

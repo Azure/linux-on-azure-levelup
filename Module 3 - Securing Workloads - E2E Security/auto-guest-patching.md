@@ -85,22 +85,21 @@ Repeat on nth (first, second, etc.) x day (for example, Monday, Tuesday) of the 
 
 8. On the **Review + create** tab, verify your update deployment options, and then select **Create**.
  
-> ## [!NOTE]
+## [!NOTE]
 
->  If you get the warning below please read. Otherwise continue with the Next steps :   
 >  
->  You may get the below warning if you skip the  “Prerequisites for scheduled patching” Step2 . You can continue with “Change the required options to ensure schedule supportability” option. Basically it will enable ByPassPlatformSafetyChecksOnUserSchedule for you.  
+>  You may get the below warning. You can continue with “Change the required options to ensure schedule supportability” option. Basically it will enable ByPassPlatformSafetyChecksOnUserSchedule for you.  
 
 
 >  *Not all Azure machines shown in the preview are configured to schedule updates. By opting for “Change the required options to ensure schedule supportability”, you are selecting the patch orchestration as "Customer Managed Schedules", which changes the patch mode to "AutomaticByPlatform" and enables ByPassPlatformSafetyChecksOnUserSchedule setting. These settings will ensure the machines are patched as per schedule and not autopatched*
 
 
-![error](err.png)
+![error](./media/err.png)
  
 
-9. You can continue with default settings for  Dynamic Scopes, Updates and Events tab for this Lab.  
+9. You can continue with default settings for  *Dynamic Scopes*, *Updates* and *Events* tab for this Lab.  
 
-10. On the Review + create tab, verify your update deployment options, and then select Create. 
+10. On the *Review + create* tab, verify your update deployment options, and then select *Create*. 
 
 Now you can check  the associated schedule to your machine on Azure Update Manager – Machines tab.  
 
@@ -116,7 +115,7 @@ Now you can check  the associated schedule to your machine on Azure Update Manag
 1. On the **Updates** pane, select **Scheduling** > **Attach maintenance configuration**.
 1. On the **Attach existing maintenance configuration** page, select the maintenance configuration that you want to attach, and then select **Attach**.
 
-![alt text](attachmc.png)
+![alt text](./media/attachmc.png)
  
 
  
@@ -132,6 +131,8 @@ Now you can check  the associated schedule to your machine on Azure Update Manag
 1. On the **Non-compliance message** tab, provide the message that you want to see if there was noncompliance. For example, use **Your machine doesn't have periodic assessment enabled.** Select **Review + Create.**
 1. On the **Review + Create** tab, select **Create** to trigger **Assignment and Remediation Task** creation, which can take a minute or so.
 
-You can monitor the compliance of resources under **Compliance** and remediation status under **Remediation** on the Azure Policy home page.
+## Resources 
+[About Azure Update Manager](https://learn.microsoft.com/en-us/azure/update-manager/overview)
+
 
  
