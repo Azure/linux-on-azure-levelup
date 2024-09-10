@@ -108,8 +108,8 @@ sudo apparmor_parser -r /etc/apparmor.d/usr.sbin.nginx
 wget https://sources.debian.org/data/main/a/apparmor/3.0.8-3/profiles/apparmor/profiles/extras/usr.sbin.sshd \
     -O /etc/apparmor.d/usr.sbin.sshd
 
-apparmor_parser -av /etc/apparmor.d/usr.sbin.sshd
-aa-complain /etc/apparmor.d/usr.sbin.sshd
+sudo apparmor_parser -av /etc/apparmor.d/usr.sbin.sshd
+sudo aa-complain /etc/apparmor.d/usr.sbin.sshd
 ```
 
 ## LAB 2: Configure Linux firewall using IPtables and ufw
@@ -181,7 +181,7 @@ Implement OS best practices for security, including setting up automatic unatten
 Enable ubuntu unattended updates, this configuration file provides various settings for the Unattended-Upgrade utility, allowing you to customize how the system handles automatic package upgrades, rebooting, email notifications, and cleanup of unused packages and dependencies.
 
 ```bash
-cat <<EOF > /etc/apt/apt.conf.d/50unattended-upgrades
+sudo cat <<EOF > /etc/apt/apt.conf.d/50unattended-upgrades
 Unattended-Upgrade::Allowed-Origins {
         "${distro_id}:${distro_codename}";
         "${distro_id}:${distro_codename}-security";
@@ -208,7 +208,7 @@ EOF
 The lines of text that follow are configuration settings for the APT (Advanced Package Tool) package manager. These settings control the automatic updates and upgrades of packages on a system. The configuration file /etc/apt/apt.conf.d/20auto-upgrades is used to specify the settings for automatic updates and upgrades. The settings include the following:
 
 ```bash
-cat <<EOF > /etc/apt/apt.conf.d/20auto-upgrades
+sudo cat <<EOF > /etc/apt/apt.conf.d/20auto-upgrades
 APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
 APT::Periodic::Download-Upgradeable-Packages "1";
@@ -219,7 +219,7 @@ EOF
 The bash command systemctl restart unattended-upgrades.service is used to restart the unattended-upgrades.service service.
 
 ```bash
-systemctl restart unattended-upgrades.service
+sudo systemctl restart unattended-upgrades.service
 ```
 
 ### Step 2: Configure password complexity
@@ -306,8 +306,8 @@ rngtest < random_output
 Enabling password for sudo is a good practice to ensure that only authorized users can execute privileged commands. To enable password for sudo, you can modify the sudo configuration file (`/etc/sudoers`) with the following settings:
 
 ```bash
-apt update
-apt install pwgen -y
+sudo apt update
+sudo apt install pwgen -y
 ```
 
 Let's generate a random passwords and set it for our admin user.
@@ -320,7 +320,7 @@ The recommended way to change sudo settings is to use visudo but changing the fi
 The command below has a risk attached as it does a direct no-backup, in-place delete of NOPASSWD and will rely on the fact that user has the password set previously.
 
 ```bash
-sed -i 's/NOPASSWD\://g' /etc/sudoers.d/90-cloud-init-users
+sudo sed -i 's/NOPASSWD\://g' /etc/sudoers.d/90-cloud-init-users
 
 visudo -cf /etc/sudoers.d/90-cloud-init-users
 ```
@@ -361,7 +361,7 @@ Secure the SSH service by configuring it to listen on a specific interface, rest
 To configure the SSH server to listen on a specific interface, restrict to IPv4, limit the number of sessions, disable key forwarding, reduce the timeout, and allow only certain groups, you can modify the SSH configuration file (`/etc/ssh/sshd_config`) with the following settings:
 
 ```bash
-cat <<EOF > /etc/ssh/sshd_config
+sudo cat <<EOF > /etc/ssh/sshd_config
 #
 # Set protocol
 #
@@ -504,7 +504,7 @@ net.ipv4.tcp_congestion_control = cubic
 Recommended settings including congestion control algorithm BBR:
 
 ```bash
-cat <<EOF > /etc/sysctl.d/99-azure-network-buffers.conf
+sudo cat <<EOF > /etc/sysctl.d/99-azure-network-buffers.conf
 
 net.core.rmem_max = 2147483647
 net.core.wmem_max = 2147483647
@@ -512,6 +512,8 @@ net.ipv4.tcp_rmem = 4096 67108864 1073741824
 net.ipv4.tcp_wmem = 4096 67108864 1073741824
 net.ipv4.tcp_congestion_control = bbr
 EOF
+
+sudo sysctl -p /etc/sysctl.d/99-azure-network-buffers.conf
 ```
 
 To view the qdisc settings on linux use the following command:
@@ -545,7 +547,7 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 Now let's create a certificate for your Azure Public IP address based on your [Azure Domain Name Label](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-addresses#domain-name-label).
 
 ```bash
-certbot --nginx -d <domainnamelabel>.<location>.cloudapp.azure.com
+certbot --nginx -d <domainnamelabel>.<location>.cloudapp.azure.com # replace with your domain name
 ```
 
 ### Step 2: Create a strong SSL configuration for NGINX
@@ -570,14 +572,15 @@ server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
 
-    ssl_certificate /path/to/signed_cert_plus_intermediates;
-    ssl_certificate_key /path/to/private_key;
+    ssl_certificate /path/to/signed_cert_plus_intermediates; # /etc/letsencrypt/live/<domainnamelabel>.<location>.cloudapp.azure.com>/fullchain.pem;
+    ssl_certificate_key /path/to/private_key; # /etc/letsencrypt/live/<domainnamelabel>.<location>.cloudapp.azure.com>/privkey.pem;
     ssl_session_timeout 1d;
     ssl_session_cache shared:MozSSL:10m;  # about 40000 sessions
     ssl_session_tickets off;
 
     # curl https://ssl-config.mozilla.org/ffdhe2048.txt > /path/to/dhparam
-    ssl_dhparam /path/to/dhparam;
+    ssl_dhparam /etc/ssl/dhparam.pem;
+    ssl_ecdh_curve secp384r1;
 
     # intermediate configuration
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -591,11 +594,8 @@ server {
     ssl_stapling on;
     ssl_stapling_verify on;
 
-    # verify chain of trust of OCSP response using Root CA and Intermediate certs
-    ssl_trusted_certificate /path/to/root_CA_cert_plus_intermediates;
-
     # replace with the IP address of your resolver
-    resolver 127.0.0.1;
+    resolver 127.0.0.53;
 }
 EOF
 ```
@@ -618,7 +618,7 @@ ssl_ecdh_curve secp384r1; # Secure it with an elliptic curve algorithm instead o
 We now need to restart the NGINX service to apply the changes.
 
 ```bash
-systemctl restart nginx
+sudo systemctl restart nginx
 ```
 
 ### Step 5: Testing the SSL configuration using Qualys SSL Labs
