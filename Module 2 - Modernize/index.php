@@ -18,14 +18,18 @@ echo "<h1>Sample Northwind Data</h1>";
 if (pg_num_rows($result) > 0) {
     echo "<table><tr><th>CategoryID</th><th>ProductID</th><th>OrderDetailID</th></tr>";
     // Output data of each row
-    while ($row = pg_fetch_assoc($result)) {
-        echo "<tr><td>" . $row["categoryid"] . "</td><td>" . $row["productid"] . "</td><td>" . $row["orderdetailid"] . "</td></tr>";
-    }
-    echo "</table>";
-} else {
-    echo "0 results";
+while ($row = pg_fetch_assoc($result)) {
+    echo "<tr>
+            <td>" . $row['product_id'] . "</td>
+            <td>" . $row['product_name'] . "</td>
+            <td>" . $row['unit_price'] . "</td>
+            <td>" . $row['units_in_stock'] . "</td>
+        </tr>";
 }
 
+echo "</table>";
+
+// Free result and close the connection
 pg_free_result($result);
 pg_close($conn);
 ?>
