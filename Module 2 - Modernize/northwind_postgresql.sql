@@ -1,7 +1,3 @@
--- Create the database
-CREATE DATABASE northwind;
-\c northwind;  -- Connect to the Northwind database
-
 -- Create the "categories" table
 CREATE TABLE categories (
     category_id SERIAL PRIMARY KEY,
