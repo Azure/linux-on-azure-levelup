@@ -2,5 +2,5 @@
 
 This module is focused two workflows:
 
-Moving PostGreSQL Database from on-premsises into Azure PaaS
-Migrating an Apache webserver from on-premsies into an Azure IaaS VM using Azure Verified Modules
+Building a PostGreSQL Database on-premsises.
+Building an Apache webserver.
