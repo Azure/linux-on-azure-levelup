@@ -91,7 +91,7 @@ sudo -u postgres psql
 Then
 
 ```bash
-ALTER USER postgres PASSWORD '6XxJzWjDTtPt';
+ALTER USER postgres PASSWORD 'yourcomplexpassword';
 ```
 
 11. You should be able to use a database client such as pgAdmin to connect and view the database.
