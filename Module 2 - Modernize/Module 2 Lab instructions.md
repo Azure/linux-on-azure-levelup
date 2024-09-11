@@ -25,6 +25,7 @@ reboot
 ```bash
 curl -o /root/setuppostgresql.sh https://raw.githubusercontent.com/Azure/linux-on-azure-levelup/main/Module%202%20-%20Modernize/setuppostgresql.sh
 ```
+
 2. Now run the script to install postgresql server
 
 ```bash
@@ -36,11 +37,13 @@ bash setuppostgresql.sh
 ```bash
 sudo -u postgres psql
 ```
+
 4. Run the SQL script to create the sample database
 
 ```bash
 \i /northwind_postgresql.sql;
 ```
+
 5. Connect to the database
 
 ```bash
@@ -51,6 +54,12 @@ sudo -u postgres psql
 
 ```bash
 \dt
+```
+
+Then quit
+
+```bash
+\q
 ```
 
 7. We need to modify the PostgreSQL configuration to allow remote connections. The two files that we need to modify are:
@@ -72,6 +81,20 @@ host   all   all  ::/0   md5
 listen_addresses = '*'
 ```
 **NOTE** This last action is not a secure or best practice. For the sake of troubleshooting within the lab, this will allow the IP address to change on reboots for the lab.
+
+10. Last step is to set the password for postgres database user
+
+```bash
+sudo -u postgres psql
+```
+
+Then
+
+```bash
+ALTER USER postgres PASSWORD '6XxJzWjDTtPt';
+```
+
+11. You should be able to use a database client such as pgAdmin to connect and view the database.
 
 ## Setup Apache web server
 
