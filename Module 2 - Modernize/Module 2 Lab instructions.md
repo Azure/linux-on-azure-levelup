@@ -50,12 +50,6 @@ sudo -u postgres psql
 \c northwind;
 ```
 
-6. Verify that the database was created
-
-```bash
-\dt
-```
-
 Then quit
 
 ```bash
