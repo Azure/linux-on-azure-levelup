@@ -23,7 +23,7 @@ reboot
 1. Log into the postgresql server using putty as the root user. Download the postgresql setup script using curl
 
 ```bash
-curl -o /root/setupapache.sh https://raw.githubusercontent.com/Azure/linux-on-azure-levelup/main/Module%202%20-%20Modernize/setuppostgresql.sh
+curl -o /root/setuppostgresql.sh https://raw.githubusercontent.com/Azure/linux-on-azure-levelup/main/Module%202%20-%20Modernize/setuppostgresql.sh
 ```
 2. Now run the script to install postgresql server
 
