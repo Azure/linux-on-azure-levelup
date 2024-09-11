@@ -208,7 +208,7 @@ As your CentOS server is not subscribed to the Red Hat CDN, you will need to ena
 At the command type "curl -o /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release <https://www.redhat.com/security/data/fd431d51.txt>"
 
 ```bash
-curl -o /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release  https://security.access.redhat.com/data/fd431d51.txt
+curl https://security.access.redhat.com/data/fd431d51.txt -o /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
 ```
 
 2. Download the SSL certificate
