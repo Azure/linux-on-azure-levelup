@@ -108,3 +108,6 @@ curl -o /var/www/html/index.php https://raw.githubusercontent.com/Azure/linux-on
 ```bash
 vi /var/www/html/index.php
 ```
+## Migration steps
+
+For PostgreSQL Database: https://learn.microsoft.com/en-us/azure/dms/tutorial-postgresql-azure-postgresql-online-portal
