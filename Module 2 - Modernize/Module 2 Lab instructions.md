@@ -66,14 +66,12 @@ host   all   all  ::/0   md5
 ```
 **NOTE** This last action is not a secure or best practice. For the sake of troubleshooting within the lab, this will allow connections from any IP address.
 
-9. Using vi, modify pg_hba.conf file so that the server will listen on any ip address. Scroll to the CONNECTIONS AND AUTHENTICATION section of the file.
+9. Using vi, modify pg_hba.conf file so that the server will listen on any ip address. Scroll to the CONNECTIONS AND AUTHENTICATION section of the file. For this lab, add the below information above the current entry and using the '#' to comment out the entry below.
 
 ```bash
 listen_addresses = '*'
 ```
 **NOTE** This last action is not a secure or best practice. For the sake of troubleshooting within the lab, this will allow the IP address to change on reboots for the lab.
-
-
 
 ## Setup Apache web server
 
