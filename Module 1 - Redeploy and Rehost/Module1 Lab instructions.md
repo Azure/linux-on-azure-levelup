@@ -163,7 +163,6 @@ sudo yum makecache
 <img src="images/PostgreSQL_20.png" alt="New repo file" width="50%" />
 </div>
 
-![New repo file](images/PostgreSQL_20.png "New repo file")
 
 19. To update the system type the follwoing at the command line "sudo yum update -y"
 
