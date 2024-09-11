@@ -53,6 +53,28 @@ sudo -u postgres psql
 \dt
 ```
 
+7. We need to modify the PostgreSQL configuration to allow remote connections. The two files that we need to modify are:
+
++ /var/lib/pgsql/data/pg_hba.conf
++ /var/lib/pgsql/data/postgresql.conf
+
+8. Using vi, add at the bottom of postgreql.conf file the following two lines.
+
+```bash
+host   all   all  0.0.0.0/0   md5
+host   all   all  ::/0   md5
+```
+**NOTE** This last action is not a secure or best practice. For the sake of troubleshooting within the lab, this will allow connections from any IP address.
+
+9. Using vi, modify pg_hba.conf file so that the server will listen on any ip address. Scroll to the CONNECTIONS AND AUTHENTICATION section of the file.
+
+```bash
+listen_addresses = '*'
+```
+**NOTE** This last action is not a secure or best practice. For the sake of troubleshooting within the lab, this will allow the IP address to change on reboots for the lab.
+
+
+
 ## Setup Apache web server
 
 1. Log into server created in Module 1, LinuxLabVM-CentOS-7-Apache, using putty as root. Type in the command to set the hostname of the server. Then reboot the server.
