@@ -4,10 +4,11 @@
 sudo yum update -y
 
 # Install Apache (httpd) and PHP with PostgreSQL support
+
 sudo yum install -y httpd
-sudo yum install -y postgresql postgresql-server postgresql-contrib
+sudo yum install -y php
+sudo yum install -y php-xml
 sudo yum install -y php-pgsql
-sudo yum install -y postgresql-devel
 
 # Enable and start Apache service
 sudo systemctl enable httpd
