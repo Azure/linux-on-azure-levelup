@@ -90,20 +90,27 @@ Follow the steps below for all three VM's listed above (EOL-2-RHEL, PostGreSQL, 
 
 10. Find the IP address of the VM by typing "ip addr" at the command line
 
-
-![IP Address](images/PostgreSQL_11.png "IP Address")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_11.png" alt="IP Address" width="50%" />
+</div>
 
 11. Using Putty log into the VM using Putty or other SSH client
 
-![Putty](images/PostgreSQL_12.png "Putty")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_12.png" alt="Putty" width="50%" />
+</div>
 
 12. Accept the key fingerprint
 
-![Fingerprint](images/PostgreSQL_13.png "Fingerprint")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_13.png" alt="Fingerprint" width="50%" />
+</div>
 
 13. Log into VM via SSH client
 
-![SSH Client](images/PostgreSQL_14.png "SSH Client")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_14.png" alt="SSH Client" width="50%" />
+</div>
 
 14. Switch to the root directory of the VM by typing "cd /" at the command line
 
@@ -111,7 +118,9 @@ Follow the steps below for all three VM's listed above (EOL-2-RHEL, PostGreSQL, 
 cd /
 ```
 
-![SSH Client](images/PostgreSQL_15.png "SSH Client")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_15.png" alt="SSH Client" width="50%" />
+</div>
 
 15. Since CentOS is End of Life we need to use archived repos to update the system, so first back up the exsisting repo file by typing "sudo cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak" at the command line
 
@@ -119,7 +128,9 @@ cd /
 sudo cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
 ```
 
-![Back up old repo](images/PostgreSQL_16.png "Back up old repo")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_16.png" alt="Back up old repo" width="50%" />
+</div>
 
 16. Using curl command lets pull down a copy of active repo's by typing the folliwing at the comamnd line "curl -o /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/AtlasGondal/centos7-eol-repo-fix/main/CentOS-Base.repo"
 
@@ -127,7 +138,10 @@ sudo cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/AtlasGondal/centos7-eol-repo-fix/main/CentOS-Base.repo
 ```
 
-![New repo file](images/PostgreSQL_18.png "New repo file")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_18.png" alt="New repo file" width="50%" />
+</div>
+
 
 17. Now we need to clean the current yum cache by typing the following at the command line "sudo yum clean all"
 
@@ -135,13 +149,19 @@ curl -o /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/Atla
 sudo yum clean all
 ```
 
-![New repo file](images/PostgreSQL_19.png "New repo file")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_19.png" alt="New repo file" width="50%" />
+</div>
 
 18. Now we need to make a new yum cache by typing the following at the command line "sudo yum makecache"
 
 ```bash
 sudo yum makecache
 ```
+
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_20.png" alt="New repo file" width="50%" />
+</div>
 
 ![New repo file](images/PostgreSQL_20.png "New repo file")
 
@@ -157,7 +177,9 @@ sudo yum update -y
 reboot
 ```
 
-![New repo file](images/PostgreSQL_21.png "New repo file")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_21.png" alt="New repo file" width="50%" />
+</div>
 
 21. Run steps 1 through 20 for all the VM's in the lab and also explority VM's
 
