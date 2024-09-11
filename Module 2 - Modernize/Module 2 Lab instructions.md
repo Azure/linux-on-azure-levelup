@@ -126,7 +126,7 @@ bash setupapache.sh
 ```bash
 curl -o /var/www/html/index.php https://raw.githubusercontent.com/Azure/linux-on-azure-levelup/main/Module%202%20-%20Modernize/index.php
 ```
-4. The sample php file has a postgresql database connection string that needs to be modified. Using vi as an editor open the file and change the IP Address to the PostgreSQL Server
+4. The sample php file has a postgresql database connection string that needs to be modified. Using vi as an editor open the file and change the IP Address to the PostgreSQL Server and Password you set for postgres user.
 
 ```bash
 vi /var/www/html/index.php
