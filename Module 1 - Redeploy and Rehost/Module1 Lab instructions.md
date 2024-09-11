@@ -32,83 +32,155 @@ The three VM's we will use are:
 Follow the steps below for all three VM's listed above (EOL-2-RHEL, PostGreSQL, Apache)
 1. Configure Language preference for OS install
 
-![Language Preference](images/PostgreSQL_1.png "Language Preference")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_1.png" alt="Language Preference" width="50%" />
+</div>
 
 2. Configure Installation Destination
 
-![Destination](images/PostgreSQL_2.png "Destination")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_2.png" alt="Destination" width="50%" />
+</div>
 
 3. Choose 60 GiB Virtaul Disk to install to
 
-![Install Disk](images/PostgreSQL_3.png "Install Disk")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_3.png" alt="Install Disk" width="50%" />
+</div>
 
 4. Configure Network (Toggle Network interface to "ON")
 
-![Network](images/PostgreSQL_4.png "Network")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_4.png" alt="Network" width="50%" />
+</div>
 
 5. Begin Installation
 
-![Begin Install](images/PostgreSQL_5.png "Begin Install")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_5.png" alt="Begin Install" width="50%" />
+</div>
 
 6. Set Root password to something you can remember for the lab
 
-![Root Password](images/PostgreSQL_6.png "Root Password")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_6.png" alt="Root Password" width="50%" />
+</div>
 
-![Root Password](images/PostgreSQL_7.png "Root Password")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_7.png" alt="Root Password" width="50%" />
+</div>
 
 7. Let installation continue to complete (about five minutes)
 
-![Root Password](images/PostgreSQL_8.png "Root Password")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_8.png" alt="Root Password" width="50%" />
+</div>
 
 8. Reboot system
 
-![Reboot system](images/PostgreSQL_9.png "Reboot system")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_9.png" alt="Reboot system" width="50%" />
+</div>
 
 9. Log into VM from the console
 
-![First time login](images/PostgreSQL_10.png "First time login")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_10.png" alt="First time login" width="50%" />
+</div>
 
 10. Find the IP address of the VM by typing "ip addr" at the command line
 
-![IP Address](images/PostgreSQL_11.png "IP Address")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_11.png" alt="IP Address" width="50%" />
+</div>
 
 11. Using Putty log into the VM using Putty or other SSH client
 
-![Putty](images/PostgreSQL_12.png "Putty")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_12.png" alt="Putty" width="50%" />
+</div>
 
 12. Accept the key fingerprint
 
-![Fingerprint](images/PostgreSQL_13.png "Fingerprint")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_13.png" alt="Fingerprint" width="50%" />
+</div>
 
 13. Log into VM via SSH client
 
-![SSH Client](images/PostgreSQL_14.png "SSH Client")
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_14.png" alt="SSH Client" width="50%" />
+</div>
 
 14. Switch to the root directory of the VM by typing "cd /" at the command line
 
-![SSH Client](images/PostgreSQL_15.png "SSH Client")
+```bash
+cd /
+```
+
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_15.png" alt="SSH Client" width="50%" />
+</div>
 
 15. Since CentOS is End of Life we need to use archived repos to update the system, so first back up the exsisting repo file by typing "sudo cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak" at the command line
 
-![Back up old repo](images/PostgreSQL_16.png "Back up old repo")
+```bash
+sudo cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+```
+
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_16.png" alt="Back up old repo" width="50%" />
+</div>
 
 16. Using curl command lets pull down a copy of active repo's by typing the folliwing at the comamnd line "curl -o /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/AtlasGondal/centos7-eol-repo-fix/main/CentOS-Base.repo"
 
-![New repo file](images/PostgreSQL_18.png "New repo file")
+```bash
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://raw.githubusercontent.com/AtlasGondal/centos7-eol-repo-fix/main/CentOS-Base.repo
+```
+
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_18.png" alt="New repo file" width="50%" />
+</div>
+
 
 17. Now we need to clean the current yum cache by typing the following at the command line "sudo yum clean all"
 
-![New repo file](images/PostgreSQL_19.png "New repo file")
+```bash
+sudo yum clean all
+```
+
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_19.png" alt="New repo file" width="50%" />
+</div>
 
 18. Now we need to make a new yum cache by typing the following at the command line "sudo yum makecache"
 
-![New repo file](images/PostgreSQL_20.png "New repo file")
+```bash
+sudo yum makecache
+```
+
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_20.png" alt="New repo file" width="50%" />
+</div>
+
 
 19. To update the system type the follwoing at the command line "sudo yum update -y"
 
-![New repo file](images/PostgreSQL_21.png "New repo file")
+```bash
+sudo yum update -y
+```
 
-20. Run steps 1 through 19 for all the VM's in the lab and also explority VM's
+20. Reboot the system
+
+```bash
+reboot
+```
+
+<div style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
+<img src="images/PostgreSQL_21.png" alt="New repo file" width="50%" />
+</div>
+
+21. Run steps 1 through 20 for all the VM's in the lab and also explority VM's
 
 ## Run the Convert2RHEL Commands on the LinuxLabVM-CentOS-7-EOL-2-RHEL VM
 
@@ -120,6 +192,11 @@ Now we'll actually perform the Centos to RHEL conversion. Keep in mind to use el
 
 At the command type "cd /"
 
+```bash
+cd /
+```
+
+
 ## Enabling the Convert2RHEL Repository on LinuxLabVM-CentOS-7-EOL-2-RHEL VM
 
 The Convert2RHEL RPM is an offical Red Hat package.
@@ -130,13 +207,25 @@ As your CentOS server is not subscribed to the Red Hat CDN, you will need to ena
 
 At the command type "curl -o /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release <https://www.redhat.com/security/data/fd431d51.txt>"
 
+```bash
+curl -o /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release <https://www.redhat.com/security/data/fd431d51.txt>
+```
+
 2. Download the SSL certificate
 
-At the command type "curl --create-dirs -o /etc/rhsm/ca/redhat-uep.pem <https://ftp.redhat.com/redhat/convert2rhel/redhat-uep.pem>"
+At the command type "curl --create-dirs -o /etc/rhsm/ca/redhat-uep.pem https://ftp.redhat.com/redhat/convert2rhel/redhat-uep.pem"
+
+```bash
+curl --create-dirs -o /etc/rhsm/ca/redhat-uep.pem https://ftp.redhat.com/redhat/convert2rhel/redhat-uep.pem
+```
 
 3. Download the convert2rhel repository file
 
 At the command type "curl -o /etc/yum.repos.d/convert2rhel.repo <https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo>"
+
+```bash
+curl -o /etc/yum.repos.d/convert2rhel.repo https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo
+```
 
 ## Installing the Convert2RHEL Utility on LinuxLabVM-CentOS-7-EOL-2-RHEL VM
 
@@ -146,13 +235,26 @@ Now that the requisite repository is enabled on your CentOS Linux system, it is 
 
 At the command type "cat /etc/centos-release"
 
+```bash
+cat /etc/centos-release
+```
+
+
 2. Verify that the Convert2RHEL repo is enabled.
 
 At the command type "yum repolist"
 
+```bash
+yum repolist
+```
+
 3. Install the convert2rhel utility.
 
 At the command type "yum install -y convert2rhel"
+
+```bash
+yum install -y convert2rhel
+```
 
 ## Run the Convert2RHEL Utility on LinuxLabVM-CentOS-7-EOL-2-RHEL VM
 
@@ -167,27 +269,51 @@ The below varaibles are not recommnded for converting production systems. The re
 
 At the command type "echo "export CONVERT2RHEL_ALLOW_UNAVAILABLE_KMODS=1" >> ~/.bashrc"
 
+```bash
+echo "export CONVERT2RHEL_ALLOW_UNAVAILABLE_KMODS=1" >> ~/.bashrc
+```
+
 2. Skip Tainted Kernel Modules varaible
 
 At the command type "echo "export CONVERT2RHEL_TAINTED_KERNEL_MODULE_CHECK_SKIP=1" >> ~/.bashrc"
+
+```bash
+echo "export CONVERT2RHEL_TAINTED_KERNEL_MODULE_CHECK_SKIP=1" >> ~/.bashrc
+```
 
 3. Skip Kernel Currencey Check varaible
 
 At the command type "echo "export CONVERT2RHEL_SKIP_KERNEL_CURRENCY_CHECK=1" >> ~/.bashrc"
 
+```bash
+echo "export CONVERT2RHEL_SKIP_KERNEL_CURRENCY_CHECK=1" >> ~/.bashrc
+```
+
 4. Skip Outdated Package Check varaible
 
 At the command type "echo "export CONVERT2RHEL_OUTDATED_PACKAGE_CHECK_SKIP=1" >> ~/.bashrc"
+
+```bash
+echo "export CONVERT2RHEL_OUTDATED_PACKAGE_CHECK_SKIP=1" >> ~/.bashrc
+```
 
 5. Now Load the variable(s) into the active shell
 
 At the command type "source ~/.bashrc"
 
+```bash
+source ~/.bashrc
+```
+
 6. In order to automate this process, you need to use activation key in the conversion command.
 
 At the command type "convert2rhel --org 12451665 --activationkey convert2rhel -y"
 
-**NOTE** 
+```bash
+convert2rhel --org 12451665 --activationkey convert2rhel -y
+```
+
+**NOTE**
 
 This process takes some time!
 The above process ask to confirm at several steps.
@@ -200,17 +326,33 @@ Reboot is required because the system is now running a Red Hat Enterprise Linux 
 
 At the command type "reboot"
 
+```bash
+reboot
+```
+
 8. Verify the system is running on Red Hat Enterprise Linux.
 
 At the command type "cat /etc/redhat-release"
+
+```bash
+cat /etc/redhat-release
+```
 
 9. Verify that the necessary Red Hat repositories are enabled. Also, note that none of the old CentOS repos are available.
 
 At the command type "yum repolist"
 
+```bash
+yum repolist
+```
+
 10. Now you can review the logs from the conversion itself.
 
 At the command type "less /var/log/convert2rhel/convert2rhel.log"
+
+```bash
+less /var/log/convert2rhel/convert2rhel.log
+```
 
 Use the down arrow key or page down key to view more of the log.
 To close the log, simply press the "q" key for quit.

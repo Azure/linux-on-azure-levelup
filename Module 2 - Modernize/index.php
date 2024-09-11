@@ -1,31 +1,32 @@
 <?php
-// Connection string for PostgreSQL
-$conn = pg_connect("host=localhost dbname=northwind user=pgsqlad password=6XxJzWjDTtPt");
+// Database connection settings
+$host = '172.17.61.127'; // Replace with your remote host
+$port = '5432'; // Default PostgreSQL port
+$dbname = 'northwind'; // Replace with your database name
+$user = 'postgres'; // Replace with your PostgreSQL username
+$password = '6XxJzWjDTtPt'; // Replace with your PostgreSQL password
 
+// Connection string
+$conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password";
+
+// Try to connect to PostgreSQL
+$conn = pg_connect($conn_string);
+
+// Check if the connection was successful
 if (!$conn) {
-    die("Connection failed: " . pg_last_error());
-}
-
-$sql = "SELECT c.categoryid, p.productid, o.orderdetailid 
-        FROM Category c 
-        JOIN Product p ON c.categoryid = p.categoryid 
-        JOIN OrderDetail o ON p.productid = o.productid";
-
-$result = pg_query($conn, $sql);
-
-echo "<h1>Sample Northwind Data</h1>";
-
-if (pg_num_rows($result) > 0) {
-    echo "<table><tr><th>CategoryID</th><th>ProductID</th><th>OrderDetailID</th></tr>";
-    // Output data of each row
-    while ($row = pg_fetch_assoc($result)) {
-        echo "<tr><td>" . $row["categoryid"] . "</td><td>" . $row["productid"] . "</td><td>" . $row["orderdetailid"] . "</td></tr>";
-    }
-    echo "</table>";
+    echo "Error: Unable to connect to the database.\n";
+    echo pg_last_error();
 } else {
-    echo "0 results";
-}
+    echo "Successfully connected to the PostgreSQL database on remote host: $host\n";
+    echo "Database name: $dbname\n";
+    echo "User: $user\n";
+    echo "Port: $port\n";
 
-pg_free_result($result);
-pg_close($conn);
+    // Optionally, get some additional connection information
+    $version = pg_version($conn);
+    echo "PostgreSQL version: " . $version['client'] . "\n";
+
+    // Close the connection
+    pg_close($conn);
+}
 ?>
