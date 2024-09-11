@@ -38,16 +38,28 @@ bash setuppostgresql.sh
 sudo -u postgres psql
 ```
 
-4. Run the SQL script to create the sample database
+4. Create the database
 
 ```bash
-\i /northwind_postgresql.sql;
+CREATE DATABASE northwind;
 ```
 
 5. Connect to the database
 
 ```bash
 \c northwind;
+```
+
+6. Run the SQL script to create the sample database tables
+
+```bash
+\i /northwind_postgresql.sql;
+```
+
+7. List relations
+
+```bash
+\dt
 ```
 
 Then quit
