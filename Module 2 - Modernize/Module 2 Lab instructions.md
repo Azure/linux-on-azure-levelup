@@ -67,7 +67,7 @@ Then quit
 + /var/lib/pgsql/data/pg_hba.conf
 + /var/lib/pgsql/data/postgresql.conf
 
-8. Using vi, add at the bottom of postgreql.conf file the following two lines.
+8. Using vi, add at the bottom of pg_hba.conf file the following two lines.
 
 ```bash
 host   all   all  0.0.0.0/0   md5
@@ -75,7 +75,7 @@ host   all   all  ::/0   md5
 ```
 **NOTE** This last action is not a secure or best practice. For the sake of troubleshooting within the lab, this will allow connections from any IP address.
 
-9. Using vi, modify pg_hba.conf file so that the server will listen on any ip address. Scroll to the CONNECTIONS AND AUTHENTICATION section of the file. For this lab, add the below information above the current entry and using the '#' to comment out the entry below.
+9. Using vi, modify postgresql.conf file so that the server will listen on any ip address. Scroll to the CONNECTIONS AND AUTHENTICATION section of the file. For this lab, add the below information above the current entry and using the '#' to comment out the entry below.
 
 ```bash
 listen_addresses = '*'
