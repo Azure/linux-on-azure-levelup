@@ -5,7 +5,7 @@ sudo yum update -y
 
 # Install PostgreSQL server
 
-sudo yum install postgresql-server postgresql-contrib -y
+sudo yum install -y postgresql-server postgresql-contrib 
 
 # Initialize PostgreSQL database
 

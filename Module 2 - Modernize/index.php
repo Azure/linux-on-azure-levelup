@@ -1,6 +1,6 @@
 <?php
 // Connection string for PostgreSQL
-$conn = pg_connect("host=localhost dbname=northwind user=pgsqlad password=6XxJzWjDTtPt");
+$conn = pg_connect("host=localhost dbname=northwind user=postgres password=6XxJzWjDTtPt");
 
 if (!$conn) {
     die("Connection failed: " . pg_last_error());

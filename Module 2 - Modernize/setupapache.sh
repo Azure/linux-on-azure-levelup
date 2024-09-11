@@ -4,15 +4,18 @@
 sudo yum update -y
 
 # Install Apache (httpd) and PHP with PostgreSQL support
-sudo yum install -y httpd php php-pgsql
+sudo yum install -y httpd
+sudo yum install -y postgresql postgresql-server postgresql-contrib
+sudo yum install -y php-pgsql
+sudo yum install -y postgresql-devel
 
 # Enable and start Apache service
 sudo systemctl enable httpd
 sudo systemctl start httpd
 
 # Set proper permissions on the web root directory
-sudo chown -R apache:apache /var/www/html/
-sudo chmod -R 755 /var/www/html/
+#sudo chown -R apache:apache /var/www/html/
+#sudo chmod -R 755 /var/www/html/
 
 # Open firewall ports for HTTP (80), HTTPS (443), and PostgreSQL (5432)
 sudo firewall-cmd --permanent --add-port=80/tcp
