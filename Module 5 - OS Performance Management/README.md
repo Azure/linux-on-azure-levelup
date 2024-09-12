@@ -512,7 +512,7 @@ az network nsg create \
    --output tsv
 ```
 
-10. Create a rule to allow connections to the virtual machine on port 22 for SSH and ports 9000 for iperf3.
+10. Create a rule to allow connections to the virtual machine on port 22 for SSH, port 9000 for iperf3 and ports 19765, 19766 for qperf.
 
 ```bash
 az network nsg rule create \
@@ -526,7 +526,7 @@ az network nsg rule create \
    --source-address-prefix '*' \
    --source-port-range '*' \
    --destination-address-prefix '*' \
-   --destination-port-range 22 9000 \
+   --destination-port-range 22 9000 19765 19766\
    --output tsv
 ```
 
@@ -568,7 +568,7 @@ az vm create \
    --os-disk-size-gb 30 \
    --admin-username $VM_ADMIN_USER \
    --authentication-type ssh \
-   --ssh-key-values "$HOME/id_ed25519_levelup_key.pem.pub" \
+   --ssh-key-values "$HOME/.ssh/id_ed25519_levelup_key.pem.pub" \
    --custom-data cloud-init-os-perf.txt \
    --tags $TAGS \
    --output tsv
@@ -647,7 +647,7 @@ az network nsg rule create \
    --source-address-prefix '*' \
    --source-port-range '*' \
    --destination-address-prefix '*' \
-   --destination-port-range 22 9000 \
+   --destination-port-range 22 9000 19765 19766\
    --output tsv
 ```
 
@@ -689,7 +689,7 @@ az vm create \
    --os-disk-size-gb 30 \
    --admin-username $VM_ADMIN_USER \
    --authentication-type ssh \
-   --ssh-key-values "$HOME/id_ed25519_levelup_key.pem.pub" \
+   --ssh-key-values "$HOME/.ssh/id_ed25519_levelup_key.pem.pub" \
    --custom-data cloud-init-os-perf.txt \
    --tags $TAGS \
    --output tsv
