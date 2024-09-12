@@ -633,7 +633,7 @@ az network nsg create \
    --output tsv
 ```
 
-5. Create a rule to allow connections to the virtual machine on port 22 for SSH and ports 9000 for iperf3.
+5. Create a rule to allow connections to the virtual machine on port 22 for SSH, port 9000 for iperf3 and ports 19765, 19766 for qperf.
 
 ```bash
 az network nsg rule create \
