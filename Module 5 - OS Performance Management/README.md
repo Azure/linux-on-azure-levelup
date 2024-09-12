@@ -6,7 +6,7 @@ It will cover the following LAB topics:
 1. Test network performance using iperf3
 
 > [!IMPORTANT]
-> All of the commands below are meant to be run on a Ubuntu 24.04 LTS machine previously installed in the Azure-Infra Lab, using sudo or root privileges.
+> All of the commands below are meant to be run on a Ubuntu 24.04 LTS Virtual machine called **myFrontendVM** previously installed in the 01.Infra-Security Lab, using sudo or root privileges.
 > The below commands have been tested on WSL2 installation and the latest azure-cli version.
 
 ## LAB 1: Obtaining performance metrics from a Linux system
